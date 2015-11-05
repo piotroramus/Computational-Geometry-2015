@@ -1,11 +1,11 @@
 # coding=utf-8
 
-from intersection_test import get_intersection_point, intersects
-from intersection import Intersection
-from event_class import Event
-from state_class import State
-from segment_id import SegmentId
-from utils import *
+from lab3.intersection_test import get_intersection_point, intersects
+from lab3.intersection import Intersection
+from lab3.event_class import Event
+from lab3.state_class import State
+from lab3.segment_id import SegmentId
+from lab3.utils import *
 import heapq
 
 

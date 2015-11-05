@@ -1,6 +1,6 @@
 __author__ = 'piotr'
 
-from point import Point
+from lab3.point import Point
 
 
 class Segment(object):

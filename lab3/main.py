@@ -1,10 +1,10 @@
 __author__ = 'piotr'
 
-from display.graphics_wrapper import *
-from segments_io import *
-from sweeping import sweep
-from utils import segment_to_tuple, tuple_to_segments
-from alg_test import test
+from lab3.display.graphics_wrapper import *
+from lab3.segments_io import *
+from lab3.sweeping import sweep
+from lab3.utils import segment_to_tuple, tuple_to_segments
+from lab3.alg_test import test
 
 
 def draw_current_intersections(drawer, intersections):

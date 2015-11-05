@@ -1,6 +1,6 @@
 __author__ = 'piotr'
 
-from segment import Segment
+from lab3.segment import Segment
 
 
 epsilon = 10e-9

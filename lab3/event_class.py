@@ -1,6 +1,6 @@
 __author__ = 'piotr'
 
-from utils import epsilon
+from lab3.utils import epsilon
 
 
 def event_a_lt_b(a, b):

@@ -1,4 +1,4 @@
-from display.graphics import *
+from lab3.display.graphics import *
 
 
 def main():
@@ -20,6 +20,7 @@ def main():
     cir2.setFill("red")
     cir2.draw(win)
     time.sleep(1)
+
 
     line = Line(Point(150, 125), Point(10, 10))
     # line.setFill("yellow")

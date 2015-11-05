@@ -1,8 +1,8 @@
 # coding=utf-8
 
 from __future__ import division
-from utils import epsilon
-from point import Point
+from lab3.utils import epsilon
+from lab3.point import Point
 
 
 def line_from_segment(p1, p2):

@@ -1,7 +1,7 @@
 __author__ = 'piotr'
 
 from bintrees import AVLTree
-from utils import epsilon
+from lab3.utils import epsilon
 
 
 class State(object):

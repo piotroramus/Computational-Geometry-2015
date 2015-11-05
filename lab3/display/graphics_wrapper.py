@@ -1,6 +1,6 @@
 import time
 
-from display.graphics import GraphWin, Point, Line, Circle, Text
+from lab3.display.graphics import GraphWin, Point, Line, Circle, Text
 
 
 __author__ = 'lewap'
