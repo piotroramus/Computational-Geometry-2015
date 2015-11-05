@@ -4,9 +4,9 @@ import random
 import math
 import time
 from matplotlib import pyplot as plt
-from primitives import *
-from plots import *
-import solvers_no_animation
+from lab2.primitives import *
+from lab2.plots import *
+import lab2.solvers_no_animation
 import matplotlib.animation as manimation
 
 
