@@ -17,8 +17,19 @@ class Segment(object):
         p2 = "(" + str(self.x2) + "," + str(self.y2) + ")"
         return p1 + "->" + p2
 
+    def __eq__(self, other):
+        x_eq = self.x1 == other.x1 and self.y1 == other.y1
+        y_eq = self.x2 == other.x2 and self.y2 == other.y2
+        return x_eq and y_eq
+
+
     def max_point(self):
         if self.y1 > self.y2:
+            return self.x1, self.y1
+        return self.x2, self.y2
+
+    def min_point(self):
+        if self.y1 < self.y2:
             return self.x1, self.y1
         return self.x2, self.y2
 
@@ -31,3 +42,8 @@ class Segment(object):
         if self.y1 > self.y2:
             return self.y1
         return self.y2
+
+    def sort(self, first_x, first_y):
+        if first_x == self.x1 and first_y == self.y1:
+            return Segment(self.x1, self.y1, self.x2, self.y2)
+        return Segment(self.x2, self.y2, self.x1, self.y1)

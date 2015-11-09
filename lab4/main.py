@@ -49,7 +49,8 @@ def draw():
 
     segments.print()
     print(segments.find_init_segment())
-    pts_classification = classify(segments)
+    segments.sort_by_path()
+    # pts_classification = classify(segments)
     d.wait_for_key_pressed()
     d.shutdown()
 

@@ -1,6 +1,7 @@
 __author__ = 'piotr'
 
 from lab4.Segment import Segment
+from copy import deepcopy
 
 
 class SegmentList(object):
@@ -38,12 +39,34 @@ class SegmentList(object):
 
         return init_segment
 
+    def sort_by_path(self):
+        segs = deepcopy(self.segments)
+        init_segment = self.find_init_segment()
+        segs.remove(init_segment)
+        mp = init_segment.max_point()
+        sorted_init = init_segment.sort(*mp)
+        new_order = [sorted_init]
+        next_x, next_y = sorted_init.x2, sorted_init.y2
+
+        while segs:
+
+            next_segment = None
+            for s in segs:
+                if (s.x1 == next_x and s.y1 == next_y) or (s.x2 == next_x and s.y2 == next_y):
+                    next_segment = s
+                    segs.remove(s)
+                    break
+
+            ns = next_segment.sort(next_x, next_y)
+            next_x, next_y = ns.x2, ns.y2
+            new_order.append(ns)
+
+        print(new_order)
+        return new_order
+
     def validate(self):
         for segments in self.segments:
             pass
-
-    def sort_by_path(self):
-        pass
 
     def print(self):
         print("SEGMENTS START: ")
