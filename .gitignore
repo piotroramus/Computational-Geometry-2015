@@ -8,5 +8,5 @@ oramus_*.zip
 
 __pycache__/
 
-
+*.pyc
 .idea
