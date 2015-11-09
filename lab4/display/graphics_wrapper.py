@@ -1,7 +1,7 @@
 import time
 
-from lab3.display.graphics import GraphWin, Point, Line, Circle, Text
-
+from lab4.display.graphics import GraphWin, Point, Line, Circle, Text
+from lab4.point import Point as PointStruct
 
 __author__ = 'lewap'
 
@@ -29,7 +29,7 @@ class Drawer:
 
     def get_mouse_click(self):
         result = self.window.getMouse()
-        return result
+        return PointStruct(result.getX(), result.getY())
 
     @staticmethod
     def wait_seconds(seconds):

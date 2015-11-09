@@ -8,8 +8,9 @@ class Point(object):
         self.y = y
 
     def __eq__(self, other):
-        print("")
-        return self.x == other.x and self.y == other.y
+        if other:
+            return self.x == other.x and self.y == other.y
+        return False
 
     def __str__(self):
         return "("+str(self.x)+", " + str(self.y) + ")"

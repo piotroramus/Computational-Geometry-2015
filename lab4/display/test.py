@@ -1,4 +1,4 @@
-from lab3.display.graphics import *
+from lab4.display.graphics import *
 
 
 def main():

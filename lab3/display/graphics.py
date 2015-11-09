@@ -17,7 +17,7 @@ INSTALLATION: Put this file somewhere where Python can see it.
 OVERVIEW: There are two kinds of objects in the library. The GraphWin
 class implements a window where drawing can be done and various
 GraphicsObjects are provided that can be drawn into a GraphWin. As a
-simple example, here is a complete program to process_and_draw a circle of radius
+simple example, here is a complete program to draw a circle of radius
 10 centered in a 100x100 window:
 
 --------------------------------------------------------------------
@@ -26,7 +26,7 @@ from graphics import *
 def main():
     win = GraphWin("My Circle", 100, 100)
     c = Circle(Point(50,50), 10)
-    c.process_and_draw(win)
+    c.draw(win)
     win.getMouse() # Pause to view result
     win.close()    # Close window when done
 
@@ -443,11 +443,11 @@ class GraphicsObject:
 
         """Draw the object in graphwin, which should be a GraphWin
         object.  A GraphicsObject may only be drawn into one
-        window. Raises an error if attempt made to process_and_draw an object that
+        window. Raises an error if attempt made to draw an object that
         is already visible."""
 
         if self.canvas and not self.canvas.isClosed(): raise GraphicsError(OBJ_ALREADY_DRAWN)
-        if graphwin.isClosed(): raise GraphicsError("Can't process_and_draw to closed window")
+        if graphwin.isClosed(): raise GraphicsError("Can't draw to closed window")
         self.canvas = graphwin
         self.id = self._draw(graphwin, self.config)
         graphwin.addItem(self)
