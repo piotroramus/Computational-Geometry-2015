@@ -1,10 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 
-#sprawozdanie.odt
-#main
-#podsumowanie.txt
-#oramus_*.zip
+sprawozdanie.odt
+main
+podsumowanie.txt
+oramus_*.zip
 
 __pycache__/
 
