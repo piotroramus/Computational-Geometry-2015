@@ -4,14 +4,6 @@ from lab4.display.graphics_wrapper import Drawer
 from lab4.point import Point
 
 
-def tuple_to_point(t):
-    return Point(t[0], t[1])
-
-
-def point_to_tuple(p):
-    return p.x, p.y
-
-
 def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
         point = drawer.get_mouse_click()
         new_x = 2 * x_range * point[0] / win_size_x - x_range
@@ -33,6 +25,14 @@ def monotonic(points):
     pass
 
 
+def click_difference(point1, point2, epsilon):
+    x_dist = abs(point1[0] - point2[0])
+    y_dist = abs(point1[1] - point2[1])
+    if x_dist + y_dist > epsilon:
+        return True
+    return False
+
+
 def draw():
 
     d = Drawer("Sweeping", axes_sizes=(x_ax, y_ax))
@@ -46,13 +46,11 @@ def draw():
     points = []
     prev_point = None
     current_point = get_mouse_scaled(*scale_arguments)
-    while prev_point != current_point:
+    while not prev_point or click_difference(prev_point, current_point, click_epsilon):
         points.append(current_point)
         prev_point = current_point
         current_point = get_mouse_scaled(*scale_arguments)
 
-        points.append(current_point)
-        # print(to_draw_current)
         d.draw_line(current_point, prev_point)
 
     d.draw_line(points[-1], points[0])
@@ -69,4 +67,5 @@ if __name__ == "__main__":
 
     x_ax = 10
     y_ax = 10
+    click_epsilon = 0.01
     draw()
