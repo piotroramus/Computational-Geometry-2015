@@ -61,12 +61,24 @@ class SegmentList(object):
             next_x, next_y = ns.x2, ns.y2
             new_order.append(ns)
 
-        print(new_order)
-        return new_order
+        self.segments = new_order
 
     def validate(self):
-        for segments in self.segments:
-            pass
+        """ Checks if segments are logically connected in one path """
+        if not self.segments:
+            return True
+        prev_segment = self.segments[0]
+        for segment in self.segments[1:]:
+            if segment.x1 != prev_segment.x2 or segment.y1 != prev_segment.y2:
+                return False
+            prev_segment = segment
+
+        first_segment = self.segments[0]
+        last_segment = self.segments[-1]
+        if first_segment.x1 != last_segment.x2 or first_segment.y1 != last_segment.y2:
+            return False
+
+        return True
 
     def print(self):
         print("SEGMENTS START: ")

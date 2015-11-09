@@ -48,8 +48,9 @@ def draw():
     d.draw_line(current_point, init_point)
 
     segments.print()
-    print(segments.find_init_segment())
     segments.sort_by_path()
+    assert segments.validate()
+
     # pts_classification = classify(segments)
     d.wait_for_key_pressed()
     d.shutdown()
