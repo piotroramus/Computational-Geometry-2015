@@ -3,7 +3,6 @@ __author__ = 'piotr'
 from lab4.display.graphics_wrapper import Drawer
 from lab4.point import Point
 
-
 def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
         point = drawer.get_mouse_click()
         new_x = 2 * x_range * point[0] / win_size_x - x_range
@@ -46,7 +45,9 @@ def draw():
     points = []
     prev_point = None
     current_point = get_mouse_scaled(*scale_arguments)
+
     while not prev_point or click_difference(prev_point, current_point, click_epsilon):
+        d.draw_point(current_point, color="blue")
         points.append(current_point)
         prev_point = current_point
         current_point = get_mouse_scaled(*scale_arguments)
@@ -55,14 +56,12 @@ def draw():
 
     d.draw_line(points[-1], points[0])
 
-    print(points)
     d.wait_for_key_pressed()
     d.shutdown()
 
 
 if __name__ == "__main__":
 
-    #TODO: fix every filepath in every project
     #counterclockwise -> det > 0
 
     x_ax = 10
