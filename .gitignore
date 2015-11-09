@@ -6,7 +6,7 @@ main
 podsumowanie.txt
 oramus_*.zip
 
-#__pycache__/
+__pycache__/
 
 *.pyc
 .idea

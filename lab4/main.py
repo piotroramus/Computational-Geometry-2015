@@ -12,10 +12,11 @@ def point_to_tuple(p):
     return p.x, p.y
 
 
-def scale_point(point, win_size_x, win_size_y, x_range, y_range):
-    new_x = 2 * x_range * point.x / win_size_x - x_range
-    new_y = 2 * y_range * (win_size_y - point.y) / win_size_y - y_range
-    return new_x, new_y
+def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
+        point = drawer.get_mouse_click()
+        new_x = 2 * x_range * point[0] / win_size_x - x_range
+        new_y = 2 * y_range * (win_size_y - point[1]) / win_size_y - y_range
+        return new_x, new_y
 
 
 def orient(a, b, c):
@@ -40,23 +41,23 @@ def draw():
 
     win_size_x = d.window_x_size
     win_size_y = d.window_y_size
+    scale_arguments = d, win_size_x, win_size_y, x_ax, y_ax
 
+    points = []
     prev_point = None
-    current_point = d.get_mouse_click()
-    points = [tuple_to_point(scale_point(current_point, win_size_x, win_size_y, x_ax, y_ax))]
+    current_point = get_mouse_scaled(*scale_arguments)
     while prev_point != current_point:
+        points.append(current_point)
         prev_point = current_point
-        current_point = d.get_mouse_click()
+        current_point = get_mouse_scaled(*scale_arguments)
 
-        to_draw_current = scale_point(current_point, win_size_x, win_size_y, x_ax, y_ax)
-        to_draw_prev = scale_point(prev_point, win_size_x, win_size_y, x_ax, y_ax)
+        points.append(current_point)
+        # print(to_draw_current)
+        d.draw_line(current_point, prev_point)
 
-        points.append(tuple_to_point(to_draw_current))
-        print(to_draw_current)
-        d.draw_line(to_draw_current, to_draw_prev)
+    d.draw_line(points[-1], points[0])
 
-    d.draw_line(point_to_tuple(points[-1]), point_to_tuple(points[0]))
-
+    print(points)
     d.wait_for_key_pressed()
     d.shutdown()
 

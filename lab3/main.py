@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     random = lines2
     # lines_to_sweep = random
-    lines_to_sweep = lines4
+    lines_to_sweep = lines2
 
     # for tests purposes
     # write_lines_to_file(lines_to_sweep, 'alg_test/test_lines4.txt')
