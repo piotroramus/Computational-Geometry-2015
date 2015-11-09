@@ -16,3 +16,18 @@ class Segment(object):
         p1 = "(" + str(self.x1) + "," + str(self.y1) + ")"
         p2 = "(" + str(self.x2) + "," + str(self.y2) + ")"
         return p1 + "->" + p2
+
+    def max_point(self):
+        if self.y1 > self.y2:
+            return self.x1, self.y1
+        return self.x2, self.y2
+
+    def min_x(self):
+        if self.x1 < self.x2:
+            return self.x1
+        return self.x2
+
+    def max_y(self):
+        if self.y1 > self.y2:
+            return self.y1
+        return self.y2
