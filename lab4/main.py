@@ -5,6 +5,7 @@ from lab4.point import Point
 from lab4.classification import classify
 from lab4.Segment import Segment
 from lab4.SegmentList import SegmentList
+from lab4.tests.classification_tests import test_classification
 
 
 def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
@@ -49,7 +50,9 @@ def draw():
 
     segments.print()
     segments.sort_by_path()
+
     assert segments.validate()
+    # test_classification()
 
     # pts_classification = classify(segments)
     d.wait_for_key_pressed()

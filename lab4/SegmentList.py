@@ -64,7 +64,7 @@ class SegmentList(object):
         self.segments = new_order
 
     def validate(self):
-        """ Checks if segments are logically connected in one path """
+        """ Checks if segments are logically connected in one coherent path """
         if not self.segments:
             return True
         prev_segment = self.segments[0]
