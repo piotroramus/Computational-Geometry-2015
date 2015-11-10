@@ -100,6 +100,3 @@ def test_classification():
     next_point = (0, 11)
     category = classify_point(point, previous_point, next_point)
     assert category == CORRECT
-
-
-test_classification()

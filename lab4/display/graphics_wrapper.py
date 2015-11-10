@@ -26,6 +26,9 @@ class Drawer:
     def wait_for_key_pressed(self):
         self.window.getKey()
 
+    def get_pressed_key(self):
+        return self.window.getKey()
+
     def get_mouse_click(self):
         result = self.window.getMouse()
         return result.x, result.y

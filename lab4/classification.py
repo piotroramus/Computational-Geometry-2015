@@ -5,11 +5,21 @@ from lab4.orient import tuple_orient as orient
 
 (STARTING, ENDING, CONNECTING, DIVIDING, CORRECT) = (0, 1, 2, 3, 4)
 
-point_category = {STARTING: "STARTING",
-                  ENDING: "ENDING",
-                  CONNECTING: "CONNECTING",
-                  DIVIDING: "DIVIDING",
-                  CORRECT: "CORRECT"}
+category_description = {
+    STARTING: "STARTING",
+    ENDING: "ENDING",
+    CONNECTING: "CONNECTING",
+    DIVIDING: "DIVIDING",
+    CORRECT: "CORRECT"
+}
+
+category_color = {
+    STARTING: "green",
+    ENDING: "red",
+    CONNECTING: "blue",
+    DIVIDING: "yellow",
+    CORRECT: "brown"
+}
 
 
 def is_below(point, first_point, second_point):
@@ -37,6 +47,24 @@ def classify_point(point, previous_point, next_point):
 
 
 def classify(segments):
-
     if len(segments) < 3:
         raise ValueError("Classification needs at least 3 segments")
+
+    classification = []
+    previous_point = segments[0].point1()
+    current_point = segments[0].point2()
+    for segment in segments[1:]:
+        next_point = segment.point2()
+        c = classify_point(current_point, previous_point, next_point)
+        classification.append([current_point, c])
+        previous_point = current_point
+        current_point = next_point
+
+    #classify starting point
+    current_point = segments[0].point1()
+    next_point = segments[0].point2()
+    previous_point = segments[-1].point1()
+    c = classify_point(current_point, previous_point, next_point)
+    classification.append([current_point, c])
+
+    return classification

@@ -22,6 +22,11 @@ class Segment(object):
         y_eq = self.x2 == other.x2 and self.y2 == other.y2
         return x_eq and y_eq
 
+    def point1(self):
+        return self.x1, self.y1
+
+    def point2(self):
+        return self.x2, self.y2
 
     def max_point(self):
         if self.y1 > self.y2:

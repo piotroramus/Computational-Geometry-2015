@@ -1,11 +1,9 @@
 __author__ = 'piotr'
 
 from lab4.display.graphics_wrapper import Drawer
-from lab4.point import Point
 from lab4.classification import classify
-from lab4.Segment import Segment
 from lab4.SegmentList import SegmentList
-from lab4.tests.classification_tests import test_classification
+from lab4.tests.classification_tests import test_classification, category_color
 
 
 def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
@@ -40,28 +38,42 @@ def draw():
     while not prev_point or click_difference(prev_point, current_point, click_epsilon):
         if prev_point:
             segments.add_segment_from_points(prev_point, current_point)
-        d.draw_point(current_point, color="blue")
+        d.draw_point(current_point, color="black")
         prev_point = current_point
         current_point = get_mouse_scaled(*scale_arguments)
-        d.draw_line(current_point, prev_point)
+        d.draw_line(current_point, prev_point, color="grey")
 
     segments.add_segment_from_points(current_point, init_point)
-    d.draw_line(current_point, init_point)
+    d.draw_line(current_point, init_point, color="gray")
 
-    segments.print()
     segments.sort_by_path()
 
     assert segments.validate()
-    # test_classification()
+    test_classification()
 
-    # pts_classification = classify(segments)
-    d.wait_for_key_pressed()
+    key = d.get_pressed_key()
+    if key == 'c':
+        classification = classify(segments.segments)
+        for point, category in classification:
+            d.draw_point(point, radius=3, color=category_color[category])
+            print(str(point) + "; " + str(category))
+
+    elif key in closing_keys:
+        d.shutdown()
+        return
+
+    pressed_key = d.get_pressed_key()
+    while pressed_key not in closing_keys:
+        pressed_key = d.get_pressed_key()
+
     d.shutdown()
 
 
 if __name__ == "__main__":
 
     #counterclockwise -> det > 0
+
+    closing_keys = ["Escape", 'q']
 
     x_ax = 10
     y_ax = 10
