@@ -51,29 +51,28 @@ def draw():
     assert segments.validate()
     test_classification()
 
-    key = d.get_pressed_key()
-    if key == 'c':
+    pressed_key = d.get_pressed_key()
+    while pressed_key not in allowed_keys:
+        pressed_key = d.get_pressed_key()
+
+    if pressed_key in classify_keys:
         classification = classify(segments.segments)
         for point, category in classification:
             d.draw_point(point, radius=3, color=category_color[category])
-            print(str(point) + "; " + str(category))
 
-    elif key in closing_keys:
-        d.shutdown()
-        return
-
-    pressed_key = d.get_pressed_key()
-    while pressed_key not in closing_keys:
         pressed_key = d.get_pressed_key()
+        while pressed_key not in exit_keys:
+            pressed_key = d.get_pressed_key()
 
     d.shutdown()
 
 
 if __name__ == "__main__":
 
-    #counterclockwise -> det > 0
-
-    closing_keys = ["Escape", 'q']
+    exit_keys = ["Escape", 'q']
+    classify_keys = ['c']
+    allowed_keys = exit_keys
+    allowed_keys.extend(classify_keys)
 
     x_ax = 10
     y_ax = 10

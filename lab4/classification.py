@@ -17,7 +17,7 @@ category_color = {
     STARTING: "green",
     ENDING: "red",
     CONNECTING: "blue",
-    DIVIDING: "yellow",
+    DIVIDING: "cyan",
     CORRECT: "brown"
 }
 
