@@ -22,7 +22,7 @@ class SegmentList(object):
 
         init_segment = self.segments[0]
 
-        for segment in self.segments:
+        for segment in self.segments[1:]:
 
             if segment.max_y() < init_segment.max_y():
                 continue
@@ -31,7 +31,7 @@ class SegmentList(object):
             seg_mx, seg_my = segment.max_point()
 
             if seg_my == init_y:
-                if segment.min_x() < init_x:
+                if segment.min_x() < init_segment.min_x():
                     init_segment = segment
 
             if seg_my > init_y:
