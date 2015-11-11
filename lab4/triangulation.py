@@ -11,7 +11,6 @@ LEFT, RIGHT = 0, 1
 
 
 def is_y_monotonic(segments):
-    print(segments)
     classification = classify(segments)
     for _, category in classification:
         if category == CONNECTING or category == DIVIDING:
@@ -58,17 +57,6 @@ def belongs_to_polygon(triangle, chain):
     return (chain == LEFT and orientation > 0) or (chain == RIGHT and orientation < 0)
 
 
-def add_point(visualisation, point, color="black"):
-    step = {"point": (point, color)}
-    visualisation.append(step)
-
-
-def add_segment(visualisation, point1, point2, color="black"):
-    segment = point1, point2
-    step = {"line": (segment, color)}
-    visualisation.append(step)
-
-
 def triangulate(segments):
 
     if not is_y_monotonic(segments):
@@ -107,6 +95,31 @@ def triangulate(segments):
     return triangles
 
 
+def add_point(visualisation, point, color="black"):
+    step = {
+        "type": "point",
+        "value": (point, color)
+    }
+    visualisation.append(step)
+
+
+def add_points(visualisation, points, color="black"):
+    step = {
+        "type": "points",
+        "value": (points, color)
+    }
+    visualisation.append(step)
+
+
+def add_segment(visualisation, point1, point2, color="black"):
+    segment = point1, point2
+    step = {
+        "type": "line",
+        "value": (segment, color)
+    }
+    visualisation.append(step)
+
+
 def triangulate_with_visualisation(segments):
 
     if not is_y_monotonic(segments):
@@ -115,20 +128,13 @@ def triangulate_with_visualisation(segments):
     visualisation = []
     triangles = []
     left_chain, right_chain = split_chains(segments)
-    for point in left_chain:
-        add_point(visualisation, point, color="brown")
-    for point in right_chain:
-        add_point(visualisation, point, color="green")
+    add_points(visualisation, left_chain, color="red")
+    add_points(visualisation, right_chain, color="blue")
 
-    print("LEFT")
-    print(left_chain)
-    print("RIGHT")
-    print(right_chain)
     points_with_chain = [Point(p, LEFT) for p in left_chain]
     points_with_chain.extend([Point(p, RIGHT) for p in right_chain])
     points = sorted(points_with_chain, key=cmp_to_key(is_higher))
 
-    print(points)
     stack = [points[0], points[1]]
 
     for current_point_index in range(2, len(segments)):
@@ -152,5 +158,4 @@ def triangulate_with_visualisation(segments):
             stack.append(last)
             stack.append(point)
 
-    print(triangles)
     return triangles, visualisation

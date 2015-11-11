@@ -24,7 +24,7 @@ def click_difference(point1, point2, epsilon):
 
 def draw():
 
-    d = Drawer("Sweeping", axes_sizes=(x_ax, y_ax))
+    d = Drawer("Triangulation", axes_sizes=(x_ax, y_ax))
     d.start()
     d.draw_coordinate_system()
 
@@ -83,10 +83,15 @@ def draw():
                 text = d.put_text_not_scaled("Cannot triangulate not y-monotonic polygon!", (win_size_x - 150, win_size_y - 30), size=10)
             else:
                 triangles, visualisation = triangulate_with_visualisation(segments.segments)
-                for t in triangles:
-                    d.draw_line(t.point1, t.point2, color="black")
-                    d.draw_line(t.point2, t.point3, color="black")
-                    d.draw_line(t.point1, t.point3, color="black")
+                # for t in triangles:
+                #     d.draw_line(t.point1, t.point2, color="black")
+                #     d.draw_line(t.point2, t.point3, color="black")
+                #     d.draw_line(t.point1, t.point3, color="black")
+                for step in visualisation:
+                    if step["type"] == "points":
+                        (points, color) = step["value"]
+                        for point in points:
+                            d.draw_point(point, radius=3, color=color)
 
         pressed_key = d.get_pressed_key()
 
