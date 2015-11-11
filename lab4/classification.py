@@ -51,6 +51,14 @@ def classify(segments):
         raise ValueError("Classification needs at least 3 segments")
 
     classification = []
+
+    #classify starting point
+    current_point = segments[0].point1()
+    next_point = segments[0].point2()
+    previous_point = segments[-1].point1()
+    c = classify_point(current_point, previous_point, next_point)
+    classification.append([current_point, c])
+
     previous_point = segments[0].point1()
     current_point = segments[0].point2()
     for segment in segments[1:]:
@@ -59,12 +67,5 @@ def classify(segments):
         classification.append([current_point, c])
         previous_point = current_point
         current_point = next_point
-
-    #classify starting point
-    current_point = segments[0].point1()
-    next_point = segments[0].point2()
-    previous_point = segments[-1].point1()
-    c = classify_point(current_point, previous_point, next_point)
-    classification.append([current_point, c])
 
     return classification

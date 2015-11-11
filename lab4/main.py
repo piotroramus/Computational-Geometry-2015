@@ -4,6 +4,7 @@ from lab4.display.graphics_wrapper import Drawer
 from lab4.classification import *
 from lab4.SegmentList import SegmentList
 from lab4.tests.classification_tests import test_classification
+from lab4.triangulation import is_y_monotonic, triangulate, triangulate_with_visualisation
 
 
 def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
@@ -19,14 +20,6 @@ def click_difference(point1, point2, epsilon):
     if x_dist + y_dist > epsilon:
         return True
     return False
-
-
-def is_monotonic(segments):
-    classification = classify(segments)
-    for _, category in classification:
-        if category == CONNECTING or category == DIVIDING:
-            return False
-    return True
 
 
 def draw():
@@ -54,10 +47,21 @@ def draw():
     segments.add_segment_from_points(prev_point, init_point)
     d.draw_line(current_point, init_point, color="gray")
 
-    segments.sort_by_path()
+    segments.sort_by_monotonicity()
 
     assert segments.validate()
     test_classification()
+
+    d.put_text_not_scaled("c -> classify    ", (40, win_size_y - 70), size=9)
+    d.put_text_not_scaled("t -> triangulate ", (40, win_size_y - 50), size=9)
+    d.put_text_not_scaled("q -> quit        ", (40, win_size_y - 30), size=9)
+
+    text = None
+    y_monotonic = is_y_monotonic(segments.segments)
+    if y_monotonic:
+        text = d.put_text_not_scaled("Polygon is y-monotonic", (win_size_x - 93, win_size_y - 30), size=10)
+    else:
+        text = d.put_text_not_scaled("Polygon is not y-monotonic", (win_size_x - 100, win_size_y - 30), size=10)
 
     pressed_key = d.get_pressed_key()
     while pressed_key not in exit_keys:
@@ -68,10 +72,21 @@ def draw():
                 d.draw_point(point, radius=3, color=category_color[category])
 
         elif pressed_key in monotonicity_check_keys:
-            if is_monotonic(segments.segments):
-                d.put_text_not_scaled("Polygon is y-monotonic", (win_size_x - 93, win_size_y - 30), size=10)
+            if is_y_monotonic(segments.segments):
+                text = d.put_text_not_scaled("Polygon is y-monotonic", (win_size_x - 93, win_size_y - 30), size=10)
             else:
-                d.put_text_not_scaled("Polygon is not y-monotonic", (win_size_x - 100, win_size_y - 30), size=10)
+                text = d.put_text_not_scaled("Polygon is not y-monotonic", (win_size_x - 100, win_size_y - 30), size=10)
+
+        elif pressed_key in triangulation_keys:
+            if not y_monotonic:
+                d.remove(text)
+                text = d.put_text_not_scaled("Cannot triangulate not y-monotonic polygon!", (win_size_x - 150, win_size_y - 30), size=10)
+            else:
+                triangles, visualisation = triangulate_with_visualisation(segments.segments)
+                for t in triangles:
+                    d.draw_line(t.point1, t.point2, color="black")
+                    d.draw_line(t.point2, t.point3, color="black")
+                    d.draw_line(t.point1, t.point3, color="black")
 
         pressed_key = d.get_pressed_key()
 
