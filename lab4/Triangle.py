@@ -16,3 +16,9 @@ class Triangle(object):
         p2 = "(" + str(self.point2[0]) + "," + str(self.point2[1]) + ")"
         p3 = "(" + str(self.point3[0]) + "," + str(self.point3[1]) + ")"
         return "[" + p1 + "," + p2 + "," + p3 + "]"
+
+    def get_lines(self):
+        l1 = (self.point1, self.point2)
+        l2 = (self.point2, self.point3)
+        l3 = (self.point1, self.point3)
+        return [l1, l2, l3]

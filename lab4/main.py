@@ -92,6 +92,18 @@ def draw():
                         (points, color) = step["value"]
                         for point in points:
                             d.draw_point(point, radius=3, color=color)
+                    elif step["type"] == "point":
+                        point, color = step["value"]
+                        d.draw_point(point, radius=3, color=color)
+                    elif step["type"] == "line":
+                        segment, color = step["value"]
+                        d.draw_line(segment[0], segment[1], color=color)
+                    elif step["type"] == "lines":
+                        (lines, color) = step["value"]
+                        for line in lines:
+                            d.draw_line(line[0], line[1], color=color)
+
+                    d.wait_for_click()
 
         pressed_key = d.get_pressed_key()
 

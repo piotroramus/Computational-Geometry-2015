@@ -120,6 +120,14 @@ def add_segment(visualisation, point1, point2, color="black"):
     visualisation.append(step)
 
 
+def add_segments(visualisation, segments, color="black"):
+    step = {
+        "type": "lines",
+        "value": (segments, color)
+    }
+    visualisation.append(step)
+
+
 def triangulate_with_visualisation(segments):
 
     if not is_y_monotonic(segments):
@@ -128,24 +136,27 @@ def triangulate_with_visualisation(segments):
     visualisation = []
     triangles = []
     left_chain, right_chain = split_chains(segments)
-    add_points(visualisation, left_chain, color="red")
-    add_points(visualisation, right_chain, color="blue")
+    add_points(visualisation, left_chain, color="brown")
+    add_points(visualisation, right_chain, color="cyan")
 
     points_with_chain = [Point(p, LEFT) for p in left_chain]
     points_with_chain.extend([Point(p, RIGHT) for p in right_chain])
     points = sorted(points_with_chain, key=cmp_to_key(is_higher))
 
+    add_points(visualisation, [points[0].value, points[1].value], color="red")
     stack = [points[0], points[1]]
 
     for current_point_index in range(2, len(segments)):
         point = points[current_point_index]
         top = stack[-1]
+        add_point(visualisation, top.value, color="blue")
 
         pairs = connect_pairs(stack)
         if point.chain != top.chain:
             for pair in pairs:
                 triangle = Triangle(point.value, pair[0], pair[1])
                 triangles.append(triangle)
+                add_segments(visualisation, triangle.get_lines())
             stack = [top, point]
         else:
             last = stack.pop()
@@ -154,6 +165,7 @@ def triangulate_with_visualisation(segments):
                 if not belongs_to_polygon(triangle, point.chain):
                     break
                 triangles.append(triangle)
+                add_segments(visualisation, triangle.get_lines())
                 last = stack.pop()
             stack.append(last)
             stack.append(point)
