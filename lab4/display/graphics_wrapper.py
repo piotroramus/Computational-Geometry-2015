@@ -111,6 +111,13 @@ class Drawer:
         text.draw(self.window)
         return text
 
+    def put_text_not_scaled(self, content, point, size=7, color="black"):
+        text = Text(Point(point[0] + size, point[1] + size), content)
+        text.setSize(size)
+        text.setTextColor(color)
+        text.draw(self.window)
+        return text
+
     @staticmethod
     def remove(drawable):
         drawable.undraw()
