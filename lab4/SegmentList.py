@@ -41,32 +41,21 @@ class SegmentList(object):
 
     def sort_by_monotonicity(self):
 
-        print("SORT DEBUG")
-        segs = deepcopy(self.segments)
-        print("segs " + str(segs))
+        segments = deepcopy(self.segments)
         init_segment = self.find_init_segment()
-        print("init_segment " + str(init_segment))
-        segs.remove(init_segment)
-        print("segs with init removed " + str(segs))
+        segments.remove(init_segment)
         mp = init_segment.max_point()
-        print("mp " + str(mp[0]) + "," + str(mp[1]))
         sorted_init = init_segment.sort(*mp)
-        print("INIT SORTED: " + str(sorted_init))
         new_order = [sorted_init]
         next_x, next_y = sorted_init.x2, sorted_init.y2
-        print("next_x, next_y " + str(next_x) + "," + str(next_y))
 
-        while segs:
+        while segments:
 
-            print("segs: " + str(segs))
             next_segment = None
-            for s in segs:
-                print("s in segs: " + str(s.x1) + "," + str(s.x2))
+            for s in segments:
                 if (s.x1 == next_x and s.y1 == next_y) or (s.x2 == next_x and s.y2 == next_y):
-                    print("Found next segment")
                     next_segment = s
-                    segs.remove(s)
-                    print("segs with removed " + str(segs))
+                    segments.remove(s)
                     break
 
             ns = next_segment.sort(next_x, next_y)
@@ -74,8 +63,6 @@ class SegmentList(object):
             new_order.append(ns)
 
         self.segments = new_order
-
-        print("END OF SORT DEBUG")
 
     def validate(self):
         """ Checks if segments are logically connected in one coherent path """
