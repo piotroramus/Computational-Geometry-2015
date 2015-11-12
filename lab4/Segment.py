@@ -43,6 +43,11 @@ class Segment(object):
             return self.x1
         return self.x2
 
+    def max_x(self):
+        if self.x1 > self.x2:
+            return self.x1
+        return self.x2
+
     def max_y(self):
         if self.y1 > self.y2:
             return self.y1

@@ -4,7 +4,7 @@ from lab4.display.graphics_wrapper import Drawer
 from lab4.classification import *
 from lab4.SegmentList import SegmentList
 from lab4.tests.classification_tests import test_classification
-from lab4.triangulation import is_y_monotonic, triangulate, triangulate_with_visualisation
+from lab4.triangulation import is_y_monotonic, triangulate_with_visualisation
 
 
 def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
@@ -24,7 +24,7 @@ def click_difference(point1, point2, epsilon):
 
 def draw():
 
-    d = Drawer("Triangulation", axes_sizes=(x_ax, y_ax))
+    d = Drawer("Triangulation", axes_sizes=(x_ax, y_ax), window_sizes=(400, 400))
     d.start()
     d.draw_coordinate_system()
 

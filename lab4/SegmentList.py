@@ -31,7 +31,10 @@ class SegmentList(object):
             seg_mx, seg_my = segment.max_point()
 
             if seg_my == init_y:
-                if segment.min_x() < init_segment.min_x():
+                if segment.min_x() == init_segment.min_x():
+                    if seg_mx < init_segment.max_x():
+                        init_segment = segment
+                elif segment.min_x() < init_segment.min_x():
                     init_segment = segment
 
             if seg_my > init_y:
