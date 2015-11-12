@@ -92,4 +92,4 @@ if __name__ == "__main__":
     click_epsilon = 0.03
 
     # draw()
-    draw(filename='input/tooths.txt')
+    draw(filename='input/tooths2.txt')
