@@ -71,10 +71,11 @@ if __name__ == "__main__":
     lines3 = read_lines_from_file('input/lines3.txt')
     lines4 = read_lines_from_file('input/lines2.txt')
     lines5 = read_lines_from_file('input/lines5.txt')
+    lines6 = read_lines_from_file('input/lines6.txt')
 
     random = lines2
     # lines_to_sweep = random
-    lines_to_sweep = lines2
+    lines_to_sweep = lines6
 
     # for tests purposes
     # write_lines_to_file(lines_to_sweep, 'alg_test/test_lines4.txt')

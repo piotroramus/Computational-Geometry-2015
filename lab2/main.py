@@ -324,7 +324,7 @@ plt.ylabel('Y')
 interval = 400
 
 (A, B, C, D) = generate()
-points = C
-animate(points, jarvis=True)
+points = A
+animate(points, jarvis=False)
 
 # draw_static()

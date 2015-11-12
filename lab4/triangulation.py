@@ -117,6 +117,7 @@ def triangulate_with_visualisation(segments):
         point = points[current_point_index]
         top = stack[-1]
         add_point(visualisation, top.value, color="blue")
+        add_point(visualisation, point.value, color="blue")
 
         pairs = connect_pairs(stack)
         if point.chain != top.chain:

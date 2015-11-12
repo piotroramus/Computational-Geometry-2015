@@ -91,5 +91,5 @@ if __name__ == "__main__":
     y_ax = 10
     click_epsilon = 0.03
 
-    draw()
-    # draw(filename='input/example_from_lab.txt')
+    # draw()
+    draw(filename='input/tooths.txt')
