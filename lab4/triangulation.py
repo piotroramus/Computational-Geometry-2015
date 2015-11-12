@@ -4,7 +4,7 @@ __author__ = 'piotr'
 
 from lab4.classification import *
 from lab4.orient import tuple_orient as orient
-from lab4.utils import cmp_to_key, Point
+from lab4.utils import *
 
 
 LEFT, RIGHT = 0, 1
@@ -93,39 +93,6 @@ def triangulate(segments):
             stack.append(point)
 
     return triangles
-
-
-def add_point(visualisation, point, color="black"):
-    step = {
-        "type": "point",
-        "value": (point, color)
-    }
-    visualisation.append(step)
-
-
-def add_points(visualisation, points, color="black"):
-    step = {
-        "type": "points",
-        "value": (points, color)
-    }
-    visualisation.append(step)
-
-
-def add_segment(visualisation, point1, point2, color="black"):
-    segment = point1, point2
-    step = {
-        "type": "line",
-        "value": (segment, color)
-    }
-    visualisation.append(step)
-
-
-def add_segments(visualisation, segments, color="black"):
-    step = {
-        "type": "lines",
-        "value": (segments, color)
-    }
-    visualisation.append(step)
 
 
 def triangulate_with_visualisation(segments):

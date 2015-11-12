@@ -29,6 +29,39 @@ def cmp_to_key(custom_cmp):
     return K
 
 
+def add_point(visualisation, point, color="black"):
+    step = {
+        "type": "point",
+        "value": (point, color)
+    }
+    visualisation.append(step)
+
+
+def add_points(visualisation, points, color="black"):
+    step = {
+        "type": "points",
+        "value": (points, color)
+    }
+    visualisation.append(step)
+
+
+def add_segment(visualisation, point1, point2, color="black"):
+    segment = point1, point2
+    step = {
+        "type": "line",
+        "value": (segment, color)
+    }
+    visualisation.append(step)
+
+
+def add_segments(visualisation, segments, color="black"):
+    step = {
+        "type": "lines",
+        "value": (segments, color)
+    }
+    visualisation.append(step)
+
+
 class Point(object):
     def __init__(self, point, chain):
         super().__init__()

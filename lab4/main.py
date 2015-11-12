@@ -2,27 +2,11 @@ __author__ = 'piotr'
 
 from lab4.display.graphics_wrapper import Drawer
 from lab4.classification import *
-from lab4.SegmentList import SegmentList
-from lab4.tests.classification_tests import test_classification
 from lab4.triangulation import is_y_monotonic, triangulate_with_visualisation
+from lab4.points_io import get_segments_from_file, draw_segments_with_mouse
 
 
-def get_mouse_scaled(drawer, win_size_x, win_size_y, x_range, y_range):
-        point = drawer.get_mouse_click()
-        new_x = 2 * x_range * point[0] / win_size_x - x_range
-        new_y = 2 * y_range * (win_size_y - point[1]) / win_size_y - y_range
-        return new_x, new_y
-
-
-def click_difference(point1, point2, epsilon):
-    x_dist = abs(point1[0] - point2[0])
-    y_dist = abs(point1[1] - point2[1])
-    if x_dist + y_dist > epsilon:
-        return True
-    return False
-
-
-def draw():
+def draw(filename=None):
 
     d = Drawer("Triangulation", axes_sizes=(x_ax, y_ax), window_sizes=(400, 400))
     d.start()
@@ -32,25 +16,15 @@ def draw():
     win_size_y = d.window_y_size
     scale_arguments = d, win_size_x, win_size_y, x_ax, y_ax
 
-    segments = SegmentList()
-    prev_point = None
-    init_point = get_mouse_scaled(*scale_arguments)
-    current_point = init_point
-    while not prev_point or click_difference(prev_point, current_point, click_epsilon):
-        if prev_point:
-            segments.add_segment_from_points(prev_point, current_point)
-        d.draw_point(current_point, color="black")
-        prev_point = current_point
-        current_point = get_mouse_scaled(*scale_arguments)
-        d.draw_line(current_point, prev_point, color="grey")
-
-    segments.add_segment_from_points(prev_point, init_point)
-    d.draw_line(current_point, init_point, color="gray")
+    segments = None
+    if filename:
+        segments = get_segments_from_file(filename, d)
+    else:
+        segments = draw_segments_with_mouse(scale_arguments, click_epsilon)
 
     segments.sort_by_monotonicity()
 
     assert segments.validate()
-    test_classification()
 
     d.put_text_not_scaled("c -> classify    ", (40, win_size_y - 70), size=9)
     d.put_text_not_scaled("t -> triangulate ", (40, win_size_y - 50), size=9)
@@ -83,10 +57,6 @@ def draw():
                 text = d.put_text_not_scaled("Cannot triangulate not y-monotonic polygon!", (win_size_x - 150, win_size_y - 30), size=10)
             else:
                 triangles, visualisation = triangulate_with_visualisation(segments.segments)
-                # for t in triangles:
-                #     d.draw_line(t.point1, t.point2, color="black")
-                #     d.draw_line(t.point2, t.point3, color="black")
-                #     d.draw_line(t.point1, t.point3, color="black")
                 for step in visualisation:
                     if step["type"] == "points":
                         (points, color) = step["value"]
@@ -120,4 +90,6 @@ if __name__ == "__main__":
     x_ax = 10
     y_ax = 10
     click_epsilon = 0.03
+
     draw()
+    # draw(filename='input/square.txt')
