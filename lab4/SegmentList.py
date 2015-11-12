@@ -1,6 +1,7 @@
 __author__ = 'piotr'
 
 from lab4.Segment import Segment
+from lab4.orient import tuple_orient as orient
 from copy import deepcopy
 
 
@@ -30,15 +31,12 @@ class SegmentList(object):
             init_x, init_y = init_segment.max_point()
             seg_mx, seg_my = segment.max_point()
 
-            if seg_my == init_y:
-                if segment.min_x() == init_segment.min_x():
-                    if seg_mx < init_segment.max_x():
-                        init_segment = segment
-                elif segment.min_x() < init_segment.min_x():
-                    init_segment = segment
-
             if seg_my > init_y:
                 init_segment = segment
+
+            elif seg_my == init_y:
+                if orient(segment.max_point(), segment.min_point(), init_segment.min_point()) > 0:
+                    init_segment = segment
 
         return init_segment
 
