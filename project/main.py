@@ -2,6 +2,7 @@ from project.Point import Point
 from project.kdtree import KDTree
 from project.tests.algo_tests import test
 
+
 def linear_searching(points, x1, x2, y1, y2):
 
     result = []
@@ -13,6 +14,7 @@ def linear_searching(points, x1, x2, y1, y2):
 
 
 if __name__ == "__main__":
+
     # test(linear_searching)
 
     p1 = Point(3, 1)
@@ -27,6 +29,11 @@ if __name__ == "__main__":
               p1, p2, p3,
               p4, p5, p6, p7
               ]
+
     kdtree = KDTree()
     kdtree.from_points(points)
     kdtree.print()
+
+    print(kdtree.query(1, 5, 0.5, 3.4))
+
+    test(kdtree.query_test_signature)
