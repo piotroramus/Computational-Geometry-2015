@@ -1,7 +1,23 @@
 __author__ = 'piotr'
 
-from project.io import read_from_file
 from project.Point import Point
+from copy import deepcopy
+
+
+def _the_same_points(points1, points2):
+    if len(points1) != len(points2):
+        return False
+
+    points2 = deepcopy(points2)
+    for point in points1:
+        if point in points2:
+            points2.remove(point)
+        else:
+            return False
+    if points2:
+        return False
+
+    return True
 
 
 def test(searching_function):
@@ -27,44 +43,44 @@ def test(searching_function):
 
     # small square
     result1 = searching_function(points, 2, 3, 2, 3)
-    assert result1 == [p22, p23, p32, p33]
+    assert _the_same_points(result1, [p22, p23, p32, p33])
 
     # single point
     result2 = searching_function(points, 0, 0, 0, 0)
-    assert result2 == [p00]
+    assert _the_same_points(result2, [p00])
 
     # square outside the set
     result3 = searching_function(points, 5, 6, 5, 6)
-    assert result3 == []
+    assert _the_same_points(result3, [])
 
     # all points
     result4 = searching_function(points, -10, 10, -10, 10)
-    assert result4 == points
+    assert _the_same_points(result4, points)
 
     # rectangle intersecting set
     result5 = searching_function(points, 1, 5, 2.5, 4)
-    assert result5 == [p13, p23, p33]
+    assert _the_same_points(result5, [p13, p23, p33])
 
     # rectangle intersecting set
     result6 = searching_function(points, 0.8, 1.2, -1, 1.87)
-    assert result6 == [p10, p11]
+    assert _the_same_points(result6, [p10, p11])
 
     # square containing one point
     result7 = searching_function(points, 1.5, 2.5, 2.5, 3.5)
-    assert result7 == [p23]
+    assert _the_same_points(result7, [p23])
 
     # invalid input
     result8 = searching_function(points, 3, 1, 1, 1)
-    assert result8 == []
+    assert _the_same_points(result8, [])
 
     # invalid input
     result9 = searching_function(points, 3, 1, 4, 1)
-    assert result9 == []
+    assert _the_same_points(result9, [])
 
     # vertical line
     result10 = searching_function(points, 1, 1, 1, 4)
-    assert result10 == [p11, p12, p13]
+    assert _the_same_points(result10, [p11, p12, p13])
 
     # horizontal line
     result11 = searching_function(points, -2, 2, 0, 0)
-    assert result11 == [p00, p10, p20]
+    assert _the_same_points(result11, [p00, p10, p20])
