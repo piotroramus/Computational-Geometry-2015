@@ -1,5 +1,6 @@
 from project.Point import Point
 from project.kdtree import KDTree
+from project.quadtree import QuadTree, Boundary
 from project.tests.algo_tests import test
 from project.tests.exectution_time_tests import test as execution_time_test
 
@@ -26,12 +27,23 @@ if __name__ == "__main__":
               p7
               ]
 
-    kdtree = KDTree()
-    kdtree.from_points_recursively(points)
+    # kdtree = KDTree()
+    # kdtree.from_points_recursively(points)
     # kdtree.print()
 
     # print(kdtree.query(1, 5, 0.5, 3.4))
 
     # test(kdtree.query_test_signature)
 
-    execution_time_test()
+    # execution_time_test()
+
+    # TODO: increase bounds
+    minbound = -1.0e2
+    maxbound = 1.0e2
+    boundary = Boundary(minbound, maxbound, minbound, maxbound)
+    qtree = QuadTree(boundary)
+    qtree.from_points(points)
+    # qtree.print()
+
+    print(qtree.query(2, 3, 2, 3))
+    # test(qtree.query_test_signature)

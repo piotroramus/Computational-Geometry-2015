@@ -17,6 +17,11 @@ class KDTree(object):
             index = (length - 1) // 2
         return index
 
+    # TODO: another idea for building the tree
+    # keep only points and list of indices of sorted x and y, but:
+    # x: [1->2, ..] where 1 is the index of x and 2 index of the same point in y
+    # y: symmetric to above one
+
     def _fp(self, points_x, points_y, node):
 
         depth = (node.index + 1) % 2
@@ -27,6 +32,7 @@ class KDTree(object):
             node = self.insert(node, pivot)
 
             leftp_x = points_x[:median_index]
+            #TODO can be improved by comparing to pivot, rather than doing 'in'
             leftp_y = [p for p in points_y if p in leftp_x]
 
             rightp_x = points_x[median_index+1:]
@@ -78,6 +84,7 @@ class KDTree(object):
                 self._fp(rightp_x, rightp_y, self.root)
 
     def from_points(self, points):
+        """ Warning: this produces unbalanced tree """
         if self.root:
             raise ValueError("Tree already initialized")
 
