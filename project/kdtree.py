@@ -17,6 +17,66 @@ class KDTree(object):
             index = (length - 1) // 2
         return index
 
+    def _fp(self, points_x, points_y, node):
+
+        depth = (node.index + 1) % 2
+
+        if depth == 0:
+            median_index = self._median_index(len(points_x))
+            pivot = points_x[median_index]
+            node = self.insert(node, pivot)
+
+            leftp_x = points_x[:median_index]
+            leftp_y = [p for p in points_y if p in leftp_x]
+
+            rightp_x = points_x[median_index+1:]
+            rightp_y = [p for p in points_y if p in rightp_x]
+
+            if leftp_x:
+                self._fp(leftp_x, leftp_y, node)
+            if rightp_x:
+                self._fp(rightp_x, rightp_y, node)
+
+        elif depth == 1:
+            median_index = self._median_index(len(points_y))
+            pivot = points_y[median_index]
+            node = self.insert(node, pivot)
+
+            leftp_y = points_y[:median_index]
+            leftp_x = [p for p in points_x if p in leftp_y]
+
+            rightp_y = points_y[median_index+1:]
+            rightp_x = [p for p in points_x if p in rightp_y]
+            if leftp_y:
+                self._fp(leftp_x, leftp_y, node)
+            if rightp_y:
+                self._fp(rightp_x, rightp_y, node)
+
+        else:
+            raise ValueError("Depth error in _fp")
+
+    def from_points_recursively(self, points):
+
+        if self.root:
+            raise ValueError("Tree already initialized")
+
+        if points:
+            points_x = sorted(points, key=lambda pt: pt.x)
+            points_y = sorted(points, key=lambda pt: pt.y)
+
+            median_index = self._median_index(len(points_x))
+            root_point = points_x[median_index]
+            points_y.remove(root_point)
+            self.root = KDNode(root_point, 0)
+            leftp_x = points_x[:median_index]
+            leftp_y = [p for p in points_y if p in leftp_x]
+            rightp_x = points_x[median_index+1:]
+            rightp_y = [p for p in points_y if p in rightp_x]
+            if leftp_x:
+                self._fp(leftp_x, leftp_y, self.root)
+            if rightp_x:
+                self._fp(rightp_x, rightp_y, self.root)
+
     def from_points(self, points):
         if self.root:
             raise ValueError("Tree already initialized")
@@ -33,15 +93,18 @@ class KDTree(object):
 
             index = 1
             plen = len(points) - 1
+            lenx = len(points_x)
             p = None
             while plen > 0:
 
                 if index == 1:
                     p = points_y.pop(self._median_index(len(points_y)))
                     points_x.remove(p)
+                    lenx -= 1
                 else:
                     p = points_x.pop(self._median_index(len(points_x)))
                     points_y.remove(p)
+                    lenx -= 1
 
                 self.insert(self.root, p)
                 index = (index + 1) % 2
@@ -59,18 +122,20 @@ class KDTree(object):
         if point_coord < root_coord:
             if not root.left:
                 root.left = KDNode(point, (index + 1) % 2)
+                return root.left
             else:
                 self.insert(root.left, point)
         else:
             if not root.right:
                 root.right = KDNode(point, (index + 1) % 2)
+                return root.right
             else:
                 self.insert(root.right, point)
 
     # TODO: rename and make static
     def query_test_signature(self, points, x1, x2, y1, y2):
         kdtree = KDTree()
-        kdtree.from_points(points)
+        kdtree.from_points_recursively(points)
         return kdtree.query(x1, x2, y1, y2)
 
     def query(self, x1, x2, y1, y2):

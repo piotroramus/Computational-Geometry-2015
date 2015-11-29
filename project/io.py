@@ -25,3 +25,10 @@ def read_from_file(filename):
             points.append(Point(float(x), float(y)))
 
     return points
+
+
+def write_to_file(points, filename):
+
+    with open(filename, 'w') as f:
+        for p in points:
+            f.write(str(p.x) + "," + str(p.y) + "\n")
