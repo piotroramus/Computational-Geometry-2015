@@ -30,7 +30,6 @@ def test():
     start = time.time()
     kdtree = KDTree()
     kdtree.from_points_recursively(points3)
-    # res3 = kdtree.query_test_signature(points3, *area)
     start2 = time.time()
     res3 = kdtree.query(*area)
     end = time.time()
