@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # test(kdtree.query_test_signature)
 
-    # execution_time_test()
+    execution_time_test()
 
     # TODO: increase bounds
     minbound = -1.0e2
@@ -45,5 +45,5 @@ if __name__ == "__main__":
     qtree.from_points(points)
     # qtree.print()
 
-    print(qtree.query(2, 3, 2, 3))
+    # print(qtree.query(2, 3, 2, 3))
     # test(qtree.query_test_signature)
