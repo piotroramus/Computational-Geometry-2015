@@ -1,21 +1,12 @@
 from project.Point import Point
 from project.kdtree import KDTree
 from project.tests.algo_tests import test
-
-
-def linear_searching(points, x1, x2, y1, y2):
-
-    result = []
-    for p in points:
-        if x1 <= p.x <= x2 and y1 <= p.y <= y2:
-            result.append(p)
-
-    return result
-
+from project.tests.exectution_time_tests import test as execution_time_test
 
 if __name__ == "__main__":
 
     # test(linear_searching)
+    # test(linear_searching_with_sort)
 
     p1 = Point(3, 1)
     p2 = Point(2, 3)
@@ -26,14 +17,21 @@ if __name__ == "__main__":
     p7 = Point(4, 5)
 
     points = [
-              p1, p2, p3,
-              p4, p5, p6, p7
+              p1,
+              p2,
+              p3,
+              p4,
+              p5,
+              p6,
+              p7
               ]
 
     kdtree = KDTree()
-    kdtree.from_points(points)
-    kdtree.print()
+    kdtree.from_points_recursively(points)
+    # kdtree.print()
 
-    print(kdtree.query(1, 5, 0.5, 3.4))
+    # print(kdtree.query(1, 5, 0.5, 3.4))
 
-    test(kdtree.query_test_signature)
+    # test(kdtree.query_test_signature)
+
+    execution_time_test()
