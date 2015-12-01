@@ -48,7 +48,7 @@ class KDTree(object):
             mi = self._median_index(length)
             median = points[xi[mi]]
             key = self._key(median, depth)
-            node = self.insert2(node, median)
+            node = self.insert(node, median)
 
             low_x = xi[:mi]
             high_x = xi[mi+1:]
@@ -69,7 +69,7 @@ class KDTree(object):
             mi = self._median_index(length)
             median = points[yi[mi]]
             key = self._key(median, depth)
-            node = self.insert2(node, median)
+            node = self.insert(node, median)
 
             low_y = yi[:mi]
             high_y = yi[mi+1:]
@@ -200,7 +200,7 @@ class KDTree(object):
 
         depth = root.depth
 
-        if point[depth] < root.point[depth]:
+        if self._key(point, depth) < self._key(root.point, depth):
             if not root.left:
                 root.left = KDNode(point, (depth + 1) % 2)
                 return root.left
@@ -212,23 +212,6 @@ class KDTree(object):
                 return root.right
             else:
                 return self.insert(root.right, point)
-
-    def insert2(self, root, point):
-
-        depth = root.depth
-
-        if self._key(point, depth) < self._key(root.point, depth):
-            if not root.left:
-                root.left = KDNode(point, (depth + 1) % 2)
-                return root.left
-            else:
-                return self.insert2(root.left, point)
-        else:
-            if not root.right:
-                root.right = KDNode(point, (depth + 1) % 2)
-                return root.right
-            else:
-                return self.insert2(root.right, point)
 
     def _key(self, point, depth):
         return (point[0], point[1]) if depth == EVEN else (point[1], point[0])
