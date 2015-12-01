@@ -15,3 +15,6 @@ class Point(object):
 
     def __repr__(self, *args, **kwargs):
         return self.__str__(*args, **kwargs)
+
+    def key(self, lvl):
+        return (self.x, self.y) if lvl == 0 else (self.y, self.x)
