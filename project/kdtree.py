@@ -43,8 +43,19 @@ class KDTree(object):
 
         length = len(xi) if depth == EVEN else len(yi)
 
-        # TODO: stop when 3 points
-        if depth == EVEN and length > 0:
+        if length == 3:
+            if depth == EVEN:
+                median = points[xi[1]]
+                node = self.insert2(node, median)
+                self.insert2(node, points[xi[0]])
+                self.insert2(node, points[xi[2]])
+            else:
+                median = points[yi[1]]
+                node = self.insert2(node, median)
+                self.insert2(node, points[yi[0]])
+                self.insert2(node, points[yi[2]])
+
+        elif depth == EVEN and length > 0:
 
             mi = self._median_index(length)
             median = points[xi[mi]]
