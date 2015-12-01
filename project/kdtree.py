@@ -325,27 +325,21 @@ class KDNode(object):
         self.left = None
         self.right = None
 
-    # TODO: maybe replaced by tuple properties?
-    def coord_at_index(self, index):
-        if index == 0:
-            return self.point[0]
-        return self.point[1]
-
     # TODO: is this correct?
     def __eq__(self, other):
         return self.point == other.point
 
     def __ge__(self, other):
-        return self.coord_at_index(self.depth) >= other.coord_at_index(self.depth)
+        return self.point[self.depth] >= other.point[self.depth]
 
     def __gt__(self, other):
-        return self.coord_at_index(self.depth) > other.coord_at_index(self.depth)
+        return self.point[self.depth] > other.point[self.depth]
 
     def __le__(self, other):
-        return self.coord_at_index(self.depth) <= other.coord_at_index(self.depth)
+        return self.point[self.depth] <= other.point[self.depth]
 
     def __lt__(self, other):
-        return self.coord_at_index(self.depth) < other.coord_at_index(self.depth)
+        return self.point[self.depth] < other.point[self.depth]
 
     def __repr__(self, *args, **kwargs):
         return self.__str__(*args, **kwargs)
