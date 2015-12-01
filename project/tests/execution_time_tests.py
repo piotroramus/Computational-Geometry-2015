@@ -17,6 +17,8 @@ def test():
     points2 = deepcopy(points)
     points3 = deepcopy(points)
     points4 = deepcopy(points)
+    points5 = deepcopy(points)
+    points6 = deepcopy(points)
 
     area = -100, 10, 5, 8
 
@@ -40,15 +42,35 @@ def test():
     print("KDTree searching on already built tree: " + str(end - start2) + "s")
 
     start = time.time()
+    kdtree = KDTree()
+    kdtree.from_points_with_indices(points4)
+    start2 = time.time()
+    res4 = kdtree.query(*area)
+    end = time.time()
+    print("KDTree searching 2 with tree building: " + str(end - start) + "s")
+    print("KDTree searching 2 on already built tree: " + str(end - start2) + "s")
+
+    start = time.time()
     boundary = Boundary(-1.0e6, 1.0e6, -1.0e6, 1.0e6)
     qtree = QuadTree(boundary)
-    qtree.from_points(points4)
+    qtree.from_points(points5)
     start2 = time.time()
-    res4 = qtree.query(*area)
+    res5 = qtree.query(*area)
     end = time.time()
     print("QuadTree searching with tree building: " + str(end - start) + "s")
     print("QuadTree searching on already built tree: " + str(end - start2) + "s")
 
+    start = time.time()
+    kdtree = KDTree()
+    kdtree.from_points(points6)
+    start2 = time.time()
+    res6 = kdtree.query(*area)
+    end = time.time()
+    print("KDTree searching from_points with tree building: " + str(end - start) + "s")
+    print("KDTree searching from_points on already built tree: " + str(end - start2) + "s")
+
     assert the_same_points(res1, res2)
     assert the_same_points(res1, res3)
     assert the_same_points(res1, res4)
+    assert the_same_points(res1, res5)
+    assert the_same_points(res1, res6)
