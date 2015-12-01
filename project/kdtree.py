@@ -1,3 +1,5 @@
+from project.Point import Point
+
 __author__ = 'piotr'
 
 # TODO: define 0: HORIZONTAL_SPLIT 1: VERTICAL_SPLIT
@@ -10,17 +12,84 @@ class KDTree(object):
         self.root = None
 
     def _median_index(self, length):
-        index = None
-        if length % 2 == 0:
-            index = length // 2
-        else:
-            index = (length - 1) // 2
-        return index
+        return (length - 1) // 2
 
-    # TODO: another idea for building the tree
-    # keep only points and list of indices of sorted x and y, but:
-    # x: [1->2, ..] where 1 is the index of x and 2 index of the same point in y
-    # y: symmetric to above one
+    def _fpwi(self, points, xi, yi, depth, node):
+
+        length = len(xi) if depth == 0 else len(yi)
+
+        # TODO: stop when 3 points
+        if depth == 0 and length > 0:
+
+            mi = self._median_index(length)
+            median = points[xi[mi]]
+            key = median.key(depth)
+            node = self.insert2(node, median)
+
+            low_x = xi[:mi]
+            high_x = xi[mi+1:]
+
+            low_y, high_y = [], []
+            for index in yi:
+                k = points[index].key(0)
+                if k < key:
+                    low_y.append(index)
+                elif k > key:
+                    high_y.append(index)
+
+            self._fpwi(points, low_x, low_y, (depth + 1) % 2, node)
+            self._fpwi(points, high_x, high_y, (depth + 1) % 2, node)
+
+        elif depth == 1 and length > 0:
+
+            mi = self._median_index(length)
+            median = points[yi[mi]]
+            key = median.key(depth)
+            node = self.insert2(node, median)
+
+            low_y = yi[:mi]
+            high_y = yi[mi+1:]
+
+            low_x, high_x = [], []
+            for index in xi:
+                k = points[index].key(1)
+                if k < key:
+                    low_x.append(index)
+                elif k > key:
+                    high_x.append(index)
+
+            self._fpwi(points, low_x, low_y, (depth + 1) % 2, node)
+            self._fpwi(points, high_x, high_y, (depth + 1) % 2, node)
+
+    def from_points_with_indices(self, points):
+
+        xsort = list(sorted(points, key=lambda p: (p.x, p.y)))
+        ysort = list(sorted(points, key=lambda p: (p.y, p.x)))
+        xi, yi = [], []
+        for i, x in enumerate(xsort):
+            xi.append(points.index(x))
+        for i, y in enumerate(ysort):
+            yi.append(points.index(y))
+
+        length = len(xi)
+        mi = self._median_index(length)
+        median = points[xi[mi]]
+        self.root = KDNode(median, 0)
+
+        key = median.key(0)
+
+        low_x = xi[:mi]
+        high_x = xi[mi+1:]
+        low_y, high_y = [], []
+        for index in yi:
+            k = points[index].key(0)
+            if k < key:
+                low_y.append(index)
+            elif k > key:
+                high_y.append(index)
+
+        self._fpwi(points, low_x, low_y, 1, self.root)
+        self._fpwi(points, high_x, high_y, 1, self.root)
 
     def _fp(self, points_x, points_y, node):
 
@@ -32,7 +101,6 @@ class KDTree(object):
             node = self.insert(node, pivot)
 
             leftp_x = points_x[:median_index]
-            #TODO can be improved by comparing to pivot, rather than doing 'in'
             leftp_y = [p for p in points_y if p in leftp_x]
 
             rightp_x = points_x[median_index+1:]
@@ -93,7 +161,6 @@ class KDTree(object):
             points_x = sorted(points, key=lambda pt: pt.x)
             points_y = sorted(points, key=lambda pt: pt.y)
 
-            # TODO: think if it's possible to manage both points_x and points_y at the same time
             root_point = points_x.pop(self._median_index(len(points_x)))
             points_y.remove(root_point)
             self.root = KDNode(root_point, 0)
@@ -120,6 +187,23 @@ class KDTree(object):
         else:
             raise ValueError("Points are empty.")
 
+    def insert2(self, root, point):
+
+        index = root.index
+
+        if point.key(index) < root.point.key(index):
+            if not root.left:
+                root.left = KDNode(point, (index + 1) % 2)
+                return root.left
+            else:
+                return self.insert2(root.left, point)
+        else:
+            if not root.right:
+                root.right = KDNode(point, (index + 1) % 2)
+                return root.right
+            else:
+                return self.insert2(root.right, point)
+
     def insert(self, root, point):
 
         index = root.index
@@ -131,13 +215,13 @@ class KDTree(object):
                 root.left = KDNode(point, (index + 1) % 2)
                 return root.left
             else:
-                self.insert(root.left, point)
+                return self.insert(root.left, point)
         else:
             if not root.right:
                 root.right = KDNode(point, (index + 1) % 2)
                 return root.right
             else:
-                self.insert(root.right, point)
+                return self.insert(root.right, point)
 
     # TODO: rename and make static
     def query_test_signature(self, points, x1, x2, y1, y2):
@@ -220,6 +304,17 @@ class KDTree(object):
 
         for level in levels:
             print(level)
+
+    def _size(self, node):
+        size = 0
+        if node.left:
+            size = self._size(node.left) + 1
+        if node.right:
+            size = size + self._size(node.right) + 1
+        return size
+
+    def size(self):
+        return self._size(self.root) + 1
 
 
 class KDNode(object):
