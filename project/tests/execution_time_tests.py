@@ -11,7 +11,7 @@ __author__ = 'piotr'
 
 
 def test():
-    points = generate_points(1000, -100, 100, -100, 100)
+    points = generate_points(10000, -100, 100, -100, 100)
 
     points1 = deepcopy(points)
     points2 = deepcopy(points)

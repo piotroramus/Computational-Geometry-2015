@@ -1,5 +1,3 @@
-from project.Point import Point
-
 __author__ = 'piotr'
 
 # TODO: define 0: HORIZONTAL_SPLIT 1: VERTICAL_SPLIT
@@ -10,6 +8,9 @@ class KDTree(object):
     def __init__(self):
         super().__init__()
         self.root = None
+
+    def key(self, point, lvl):
+        return (point[0], point[1]) if lvl == 0 else (point[1], point[0])
 
     def _median_index(self, length):
         return (length - 1) // 2
@@ -23,7 +24,7 @@ class KDTree(object):
 
             mi = self._median_index(length)
             median = points[xi[mi]]
-            key = median.key(depth)
+            key = self.key(median, depth)
             node = self.insert2(node, median)
 
             low_x = xi[:mi]
@@ -31,7 +32,7 @@ class KDTree(object):
 
             low_y, high_y = [], []
             for index in yi:
-                k = points[index].key(0)
+                k = self.key(points[index], 0)
                 if k < key:
                     low_y.append(index)
                 elif k > key:
@@ -44,7 +45,7 @@ class KDTree(object):
 
             mi = self._median_index(length)
             median = points[yi[mi]]
-            key = median.key(depth)
+            key = self.key(median, depth)
             node = self.insert2(node, median)
 
             low_y = yi[:mi]
@@ -52,7 +53,7 @@ class KDTree(object):
 
             low_x, high_x = [], []
             for index in xi:
-                k = points[index].key(1)
+                k = self.key(points[index], 1)
                 if k < key:
                     low_x.append(index)
                 elif k > key:
@@ -63,8 +64,8 @@ class KDTree(object):
 
     def from_points_with_indices(self, points):
 
-        xsort = list(sorted(points, key=lambda p: (p.x, p.y)))
-        ysort = list(sorted(points, key=lambda p: (p.y, p.x)))
+        xsort = list(sorted(points))
+        ysort = list(sorted(points, key=lambda p: (p[1], p[0])))
         xi, yi = [], []
         for i, x in enumerate(xsort):
             xi.append(points.index(x))
@@ -76,13 +77,13 @@ class KDTree(object):
         median = points[xi[mi]]
         self.root = KDNode(median, 0)
 
-        key = median.key(0)
+        key = self.key(median, 0)
 
         low_x = xi[:mi]
         high_x = xi[mi+1:]
         low_y, high_y = [], []
         for index in yi:
-            k = points[index].key(0)
+            k = self.key(points[index], 0)
             if k < key:
                 low_y.append(index)
             elif k > key:
@@ -135,8 +136,8 @@ class KDTree(object):
             raise ValueError("Tree already initialized")
 
         if points:
-            points_x = sorted(points, key=lambda pt: pt.x)
-            points_y = sorted(points, key=lambda pt: pt.y)
+            points_x = sorted(points, key=lambda pt: pt[0])
+            points_y = sorted(points, key=lambda pt: pt[1])
 
             median_index = self._median_index(len(points_x))
             root_point = points_x[median_index]
@@ -158,8 +159,8 @@ class KDTree(object):
 
         if points:
 
-            points_x = sorted(points, key=lambda pt: pt.x)
-            points_y = sorted(points, key=lambda pt: pt.y)
+            points_x = sorted(points, key=lambda pt: pt[0])
+            points_y = sorted(points, key=lambda pt: pt[1])
 
             root_point = points_x.pop(self._median_index(len(points_x)))
             points_y.remove(root_point)
@@ -191,7 +192,7 @@ class KDTree(object):
 
         index = root.index
 
-        if point.key(index) < root.point.key(index):
+        if self.key(point, index) < self.key(root.point, index):
             if not root.left:
                 root.left = KDNode(point, (index + 1) % 2)
                 return root.left
@@ -208,7 +209,7 @@ class KDTree(object):
 
         index = root.index
         root_coord = root.coord_at_index(index)
-        point_coord = point.x if index == 0 else point.y
+        point_coord = point[0] if index == 0 else point[1]
 
         if point_coord < root_coord:
             if not root.left:
@@ -242,28 +243,28 @@ class KDTree(object):
             index = node.index
 
             if index == 0:
-                if x1 > node.point.x:
+                if x1 > node.point[0]:
                     if node.right:
                         queue.append(node.right)
-                elif x2 < node.point.x:
+                elif x2 < node.point[0]:
                     if node.left:
                         queue.append(node.left)
                 else:
-                    if y1 <= node.point.y <= y2:
+                    if y1 <= node.point[1] <= y2:
                         result.append(node.point)
                     if node.left:
                         queue.append(node.left)
                     if node.right:
                         queue.append(node.right)
             elif index == 1:
-                if y1 > node.point.y:
+                if y1 > node.point[1]:
                     if node.right:
                         queue.append(node.right)
-                elif y2 < node.point.y:
+                elif y2 < node.point[1]:
                     if node.left:
                         queue.append(node.left)
                 else:
-                    if x1 <= node.point.x <= x2:
+                    if x1 <= node.point[0] <= x2:
                         result.append(node.point)
                     if node.left:
                         queue.append(node.left)
@@ -328,19 +329,10 @@ class KDNode(object):
 
     def coord_at_index(self, index):
         if index == 0:
-            return self.point.x
-        return self.point.y
+            return self.point[0]
+        return self.point[1]
 
-    def get_subpoints(self, pts=None):
-        if not pts:
-            pts = []
-        pts.append(self.point)
-        if self.left:
-            pts = self.left.get_subpoints(pts)
-        if self.right:
-            pts = self.right.get_subpoints(pts)
-        return pts
-
+    # TODO: is this correct?
     def __eq__(self, other):
         return self.point == other.point
 

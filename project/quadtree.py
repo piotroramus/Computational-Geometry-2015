@@ -1,7 +1,3 @@
-from math import fabs
-
-from project.Point import Point
-
 __author__ = 'piotr'
 
 
@@ -94,11 +90,7 @@ class Boundary(object):
         return (self.x2 + self.x1)/2, (self.y2 + self.y1)/2
 
     def contains(self, point):
-        return self.x1 <= point.x <= self.x2 and self.y1 <= point.y <= self.y2
-
-    def corners(self):
-        return [Point(self.x1, self.y1), Point(self.x1, self.y2),
-                Point(self.x2, self.y1), Point(self.x2, self.y2)]
+        return self.x1 <= point[0] <= self.x2 and self.y1 <= point[1] <= self.y2
 
     def intersects(self, boundary):
         if self.x2 < boundary.x1 or boundary.x2 < self.x1 or\
@@ -122,5 +114,5 @@ class Boundary(object):
         return self.__str__(*args, **kwargs)
 
     def __str__(self, *args, **kwargs):
-        return str(self.x1) + ", " + str(self.x2) + ", " +str(self.y1) + ", " + str(self.y2)
+        return str(self.x1) + ", " + str(self.x2) + ", " + str(self.y1) + ", " + str(self.y2)
 

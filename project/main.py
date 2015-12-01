@@ -1,4 +1,3 @@
-from project.Point import Point
 from project.kdtree import KDTree
 from project.quadtree import QuadTree, Boundary
 from project.tests.algo_tests import test
@@ -10,13 +9,13 @@ if __name__ == "__main__":
     # test(linear_searching)
     # test(linear_searching_with_sort)
 
-    p1 = Point(3, 1)
-    p2 = Point(2, 3)
-    p3 = Point(2, 1)
-    p4 = Point(2, 4)
-    p5 = Point(4, 3)
-    p6 = Point(6, 1)
-    p7 = Point(4, 5)
+    p1 = (3, 1)
+    p2 = (2, 3)
+    p3 = (2, 1)
+    p4 = (2, 4)
+    p5 = (4, 3)
+    p6 = (6, 1)
+    p7 = (4, 5)
 
     points = [
               p1,
@@ -30,7 +29,7 @@ if __name__ == "__main__":
 
     kdtree = KDTree()
     # kdtree.from_points_recursively(points)
-    kdtree.from_points_with_indices(points)
+    # kdtree.from_points_with_indices(points)
     # kdtree.print()
 
     # print(kdtree.query(1, 5, 0.5, 3.4))
