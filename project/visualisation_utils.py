@@ -22,7 +22,7 @@ def draw_points_with_mouse(scale_arguments, click_epsilon=0.1):
     current_point = get_mouse_scaled(*scale_arguments)
     while not prev_point or click_difference(prev_point, current_point, click_epsilon):
         points.append(current_point)
-        d.draw_point(current_point, color="black")
+        d.draw_point(current_point, radius=3, color="black")
         prev_point = current_point
         current_point = get_mouse_scaled(*scale_arguments)
 

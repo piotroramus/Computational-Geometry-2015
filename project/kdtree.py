@@ -324,13 +324,14 @@ class KDTreeVisualisation(object):
         super().__init__()
         self.root = None
         self.visualisation = []
+        self.query_visualisation = []
 
     def _minmaxx(self, point):
         minx, maxx = [], []
 
-        print("X")
-        print(self.visualisation)
-        print()
+        # print("X")
+        # print(self.visualisation)
+        # print()
         for v in self.visualisation:
             if v['point1'][0] < point[0] and v['direction'] == INFINITE:
                 minx.append(v['point1'][0])
@@ -356,9 +357,9 @@ class KDTreeVisualisation(object):
     def _minmaxy(self, point):
         miny, maxy = [], []
 
-        print("Y")
-        print(self.visualisation)
-        print()
+        # print("Y")
+        # print(self.visualisation)
+        # print()
         for v in self.visualisation:
             if v['point1'][1] < point[1] and v['direction'] == LEFT and v['point1'][0] > point[0]:
                 miny.append(v['point1'][1])
@@ -526,6 +527,29 @@ class KDTreeVisualisation(object):
     def _median_index(self, length):
         return (length - 1) // 2
 
+    def point_range(self, point):
+
+        xmin, xmax, ymin, ymax = None, None, None, None
+        node = KDNode(point, depth=EVEN)
+        current = self.root
+        depth = 0
+        while current:
+            if current.point == node.point:
+                return xmin, xmax, ymin, ymax
+            elif current.point > node.point:
+                if depth == 0:
+                    xmax = current.point[0]
+                else:
+                    ymax = current.point[1]
+                current = current.left
+            else:
+                if depth == 0:
+                    xmin = current.point[0]
+                else:
+                    ymin = current.point[1]
+                current = current.right
+        return None
+
     def query(self, x1, x2, y1, y2):
 
         result = []
@@ -535,31 +559,65 @@ class KDTreeVisualisation(object):
 
             node = queue.pop()
             depth = node.depth
+            point = node.point
+
+            self.query_visualisation.append({
+                'type': 'point',
+                'value': point
+            })
 
             if depth == EVEN:
-                if x1 > node.point[0]:
+                if x1 > point[0]:
                     if node.right:
+                        pr = self.point_range(point)
+                        self.query_visualisation.append({
+                            'type': 'rect',
+                            'value': pr
+                        })
                         queue.append(node.right)
-                elif x2 < node.point[0]:
+                elif x2 < point[0]:
                     if node.left:
+                        pr = self.point_range(point)
+                        self.query_visualisation.append({
+                            'type': 'rect',
+                            'value': pr
+                        })
                         queue.append(node.left)
                 else:
-                    if y1 <= node.point[1] <= y2:
-                        result.append(node.point)
+                    if y1 <= point[1] <= y2:
+                        result.append(point)
+                        self.query_visualisation.append({
+                            'type': 'result_point',
+                            'value': point
+                        })
                     if node.left:
                         queue.append(node.left)
                     if node.right:
                         queue.append(node.right)
             elif depth == ODD:
-                if y1 > node.point[1]:
+                if y1 > point[1]:
                     if node.right:
+                        pr = self.point_range(point)
+                        self.query_visualisation.append({
+                            'type': 'rect',
+                            'value': pr
+                        })
                         queue.append(node.right)
-                elif y2 < node.point[1]:
+                elif y2 < point[1]:
                     if node.left:
+                        pr = self.point_range(point)
+                        self.query_visualisation.append({
+                            'type': 'rect',
+                            'value': pr
+                        })
                         queue.append(node.left)
                 else:
-                    if x1 <= node.point[0] <= x2:
-                        result.append(node.point)
+                    if x1 <= point[0] <= x2:
+                        result.append(point)
+                        self.query_visualisation.append({
+                            'type': 'result_point',
+                            'value': point
+                        })
                     if node.left:
                         queue.append(node.left)
                     if node.right:

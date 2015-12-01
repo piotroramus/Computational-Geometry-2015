@@ -1,6 +1,6 @@
 import time
 
-from lab4.display.graphics import GraphWin, Point, Line, Circle, Text
+from lab4.display.graphics import GraphWin, Point, Line, Circle, Text, Rectangle
 
 __author__ = 'lewap'
 
@@ -102,6 +102,15 @@ class Drawer:
         p.setFill(color)
         p.draw(self.window)
         return p
+
+    def draw_rectangle(self, point1, point2, outline_color="black", fill_color="gray"):
+        scaled1 = self.scale_coordinates_to_window_size(point1)
+        scaled2 = self.scale_coordinates_to_window_size(point2)
+        r = Rectangle(Point(scaled1[0], scaled1[1]), Point(scaled2[0], scaled2[1]))
+        r.setOutline(outline_color)
+        r.setFill(fill_color)
+        r.draw(self.window)
+        return r
 
     def put_text(self, content, point, size=7, color="black"):
         scaled = self.scale_coordinates_to_window_size(point)
