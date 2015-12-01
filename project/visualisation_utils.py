@@ -1,6 +1,10 @@
 __author__ = 'piotr'
 
 
+INFINITE = 0
+UP, LEFT, DOWN, RIGHT, BOTH = 10, 11, 12, 13, 14
+
+
 def click_difference(point1, point2, epsilon):
     x_dist = abs(point1[0] - point2[0])
     y_dist = abs(point1[1] - point2[1])
@@ -9,7 +13,7 @@ def click_difference(point1, point2, epsilon):
     return False
 
 
-def draw_points_with_mouse(scale_arguments, click_epsilon=0.03):
+def draw_points_with_mouse(scale_arguments, click_epsilon=0.1):
 
     d, win_size_x, win_size_y, x_ax, y_ax = scale_arguments
     points = []
