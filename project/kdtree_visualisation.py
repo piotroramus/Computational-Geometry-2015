@@ -3,23 +3,6 @@ from project.kdtree import KDTreeVisualisation
 from project.visualisation_utils import draw_points_with_mouse, INFINITE, HORIZONTAL, VERTICAL
 
 
-def draw_construction(visualisation, d, win_size_x, win_size_y, wait=False):
-    for step in visualisation:
-
-        if step['direction'] == HORIZONTAL or step['direction'] == VERTICAL:
-            pr = step['point_range']
-            point = step['point']
-            p1, p2 = determine_line(pr, point, step['direction'], win_size_x, win_size_y)
-        elif step['direction'] == INFINITE:
-            p1 = step['point']
-            p1 = p1[0], -win_size_y
-            p2 = p1[0], win_size_y
-        if p1 and p2:
-            d.draw_line(p1, p2, color="black")
-        if wait:
-            d.wait_for_click()
-
-
 def determine_rectangle(point_range, win_size_x, win_size_y):
     xmin, xmax, ymin, ymax = point_range
 
@@ -61,6 +44,27 @@ def determine_line(point_range, point, orient, win_size_x, win_size_y):
     return p1, p2
 
 
+def draw_construction(visualisation, d, win_size_x, win_size_y, wait=False):
+    for step in visualisation:
+
+        if step['direction'] == HORIZONTAL or step['direction'] == VERTICAL:
+            pr = step['point_range']
+            point = step['point']
+            p1, p2 = determine_line(pr, point, step['direction'], win_size_x, win_size_y)
+        elif step['direction'] == INFINITE:
+            p1 = step['point']
+            p1 = p1[0], -win_size_y
+            p2 = p1[0], win_size_y
+        if p1 and p2:
+            d.draw_line(p1, p2, color="black")
+        if wait:
+            d.wait_for_click()
+
+
+def draw_search_range(search_range, d):
+    d.draw_rectangle((search_range[0], search_range[2]), (search_range[1], search_range[3]), outline_color="black", fill_color="yellow")
+
+
 def visualise(search_range, filename=None):
 
     exit_keys = ["Escape", 'q']
@@ -99,26 +103,29 @@ def visualise(search_range, filename=None):
         if pressed_key in build_keys:
             kdtree.construct_balanced(points)
             tree_built = True
-            kdtree.print()
             draw_construction(kdtree.visualisation, d, win_size_x, win_size_y, wait=True)
 
         elif pressed_key in search_keys:
             if tree_built:
                 kdtree.query(*search_range)
 
-                d.draw_rectangle((search_range[0], search_range[2]), (search_range[1], search_range[3]))
+                draw_search_range(search_range, d)
                 draw_construction(kdtree.visualisation, d, win_size_x, win_size_y)
                 for p in points:
                     d.draw_point(p, radius=3, color="black")
 
+                r = None
                 for step in kdtree.query_visualisation:
+                    if r:
+                        d.remove(r)
                     if step['type'] == 'point':
-                        d.draw_point(step['value'], radius=3, color="red")
+                        d.draw_point(step['value'], radius=5, color="red")
                     if step['type'] == 'result_point':
-                        d.draw_point(step['value'], radius=3, color="green")
+                        d.draw_point(step['value'], radius=3, color="blue")
                     if step['type'] == 'rect':
                         p1, p2 = determine_rectangle(step['value'], win_size_x, win_size_y)
-                        d.draw_rectangle(p1, p2)
+                        r = d.draw_rectangle(p1, p2)
+                        draw_search_range(search_range, d)
                         draw_construction(kdtree.visualisation, d, win_size_x, win_size_y)
                         for p in points:
                             d.draw_point(p, radius=3, color="black")

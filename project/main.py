@@ -53,5 +53,5 @@ if __name__ == "__main__":
     # print(qtree.query(2, 3, 2, 3))
     # test(qtree.query_test_signature)
 
-    search_range = 0, 5, 0, 5
+    search_range = -5, 5, -5, 5
     visualise(search_range)
