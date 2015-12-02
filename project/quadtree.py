@@ -159,6 +159,7 @@ class BoundaryVisualisation(object):
 class QuadTreeVisualisation(object):
     def __init__(self, boundary):
         self.visualisation = []
+        self.query_visualisation = []
         self.tree = QTV(boundary, self)
 
     def construct(self, points):

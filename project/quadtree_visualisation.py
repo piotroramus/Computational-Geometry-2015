@@ -1,20 +1,24 @@
 from lab4.display.graphics_wrapper import Drawer
 from project.quadtree import QuadTreeVisualisation, BoundaryVisualisation
 from project.visualisation_utils import draw_points_with_mouse
+import pprint
 
 __author__ = 'piotr'
 
 
 def draw_construction(visualisation, points, d, win_size_x, win_size_y, wait=False):
 
-    print(visualisation)
+    pp = pprint.PrettyPrinter(indent=3)
+    pp.pprint(visualisation)
+
     b = None
     points_raw = points
     points_inserted = []
     active_point = None
     segments = []
 
-    for step in visualisation:
+    v = iter(visualisation)
+    for step in v:
         if step['type'] == 'boundary':
             boundary = step['value']
             p1 = boundary.x1, boundary.y1
@@ -37,12 +41,15 @@ def draw_construction(visualisation, points, d, win_size_x, win_size_y, wait=Fal
             points_inserted.append(point)
             draw_points(d, points_raw, points_inserted, active_point)
 
+        if b:
+            d.wait_for_click()
+            d.remove(b)
+            b = None
+
         if wait:
             d.wait_for_click()
-            if b:
-                d.remove(b)
-                b = None
-                # d.wait_for_click()
+
+    d.draw_point(active_point, radius=3, color='green')
 
 
 def draw_points(d, points_raw, points_inserted, active_point=None):
@@ -52,6 +59,7 @@ def draw_points(d, points_raw, points_inserted, active_point=None):
         d.draw_point(p, radius=3, color='green')
     if active_point:
         d.draw_point(active_point, radius=3, color='red')
+
 
 def draw_search_range(search_range, d):
     d.draw_rectangle((search_range[0], search_range[2]), (search_range[1], search_range[3]), outline_color="black", fill_color="yellow")
@@ -115,22 +123,6 @@ def visualise(search_range, filename=None):
                 draw_construction(qtree.visualisation, points, d, win_size_x, win_size_y)
                 for p in points:
                     d.draw_point(p, radius=3, color="black")
-
-                # r = None
-                # for step in qtree.query_visualisation:
-                #     if r:
-                #         d.remove(r)
-                #     if step['type'] == 'point':
-                #         d.draw_point(step['value'], radius=5, color="red")
-                #     if step['type'] == 'result_point':
-                #         d.draw_point(step['value'], radius=3, color="blue")
-                #     if step['type'] == 'rect':
-                #         p1, p2 = determine_rectangle(step['value'], win_size_x, win_size_y)
-                #         r = d.draw_rectangle(p1, p2)
-                #         draw_search_range(search_range, d)
-                #         draw_construction(qtree.visualisation, d, win_size_x, win_size_y)
-                #         for p in points:
-                #             d.draw_point(p, radius=3, color="black")
 
                     d.wait_for_click()
 
