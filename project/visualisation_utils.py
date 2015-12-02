@@ -2,7 +2,7 @@ __author__ = 'piotr'
 
 
 INFINITE = 0
-UP, LEFT, DOWN, RIGHT, BOTH = 10, 11, 12, 13, 14
+HORIZONTAL, VERTICAL = 1, 2
 
 
 def click_difference(point1, point2, epsilon):

@@ -1,5 +1,4 @@
-from project.visualisation_utils import INFINITE
-from project.visualisation_utils import UP, DOWN, LEFT, RIGHT, BOTH
+from project.visualisation_utils import INFINITE, HORIZONTAL, VERTICAL
 
 __author__ = 'piotr'
 
@@ -326,98 +325,14 @@ class KDTreeVisualisation(object):
         self.visualisation = []
         self.query_visualisation = []
 
-    def _minmaxx(self, point):
-        minx, maxx = [], []
-
-        # print("X")
-        # print(self.visualisation)
-        # print()
-        for v in self.visualisation:
-            if v['point1'][0] < point[0] and v['direction'] == INFINITE:
-                minx.append(v['point1'][0])
-            if v['point1'][0] < point[0] and v['direction'] == DOWN and v['point1'][1] > point[1]:
-                minx.append(v['point1'][0])
-            if v['point1'][0] < point[0] and v['direction'] == UP and v['point1'][1] < point[1]:
-                minx.append(v['point1'][0])
-            if v['point1'][0] > point[0] and v['direction'] == INFINITE:
-                maxx.append(v['point1'][0])
-            if v['point1'][0] > point[0] and v['direction'] == DOWN and v['point1'][1] > point[1]:
-                maxx.append(v['point1'][0])
-            if v['point1'][0] > point[0] and v['direction'] == UP and v['point1'][1] < point[1]:
-                maxx.append(v['point1'][0])
-
-        resultx1, resultx2 = None, None
-        if minx:
-            resultx1 = max(minx)
-        if maxx:
-            resultx2 = min(maxx)
-
-        return resultx1, resultx2
-
-    def _minmaxy(self, point):
-        miny, maxy = [], []
-
-        # print("Y")
-        # print(self.visualisation)
-        # print()
-        for v in self.visualisation:
-            if v['point1'][1] < point[1] and v['direction'] == LEFT and v['point1'][0] > point[0]:
-                miny.append(v['point1'][1])
-            if v['point1'][1] < point[1] and v['direction'] == RIGHT and v['point1'][0] < point[0]:
-                miny.append(v['point1'][1])
-            if v['point1'][1] > point[1] and v['direction'] == LEFT and v['point1'][0] > point[0]:
-                maxy.append(v['point1'][1])
-            if v['point1'][1] > point[1] and v['direction'] == RIGHT and v['point1'][0] < point[0]:
-                maxy.append(v['point1'][1])
-
-        resulty1, resulty2 = None, None
-        if miny:
-            resulty1 = max(miny)
-        if maxy:
-            resulty2 = min(maxy)
-
-        return resulty1, resulty2
-
     def visualise(self, direction, point):
 
-        p2 = None
-        if self.visualisation:
-            if direction == LEFT:
-                x1, x2 = self._minmaxx(point)
-                p1 = x2, point[1]
-                if x1:
-                    p2 = x1, point[1]
-            elif direction == RIGHT:
-                x1, x2 = self._minmaxx(point)
-                p1 = x1, point[1]
-                if x2:
-                    p2 = x2, point[1]
-            elif direction == DOWN:
-                y1, y2 = self._minmaxy(point)
-                p1 = point[0], y2
-                if y1:
-                    p2 = point[0], y1
-            elif direction == UP:
-                y1, y2 = self._minmaxy(point)
-                p1 = point[0], y1
-                if y2:
-                    p2 = point[0], y2
-        else:
-            p1 = point
-
-        if p2:
-            self.visualisation.append(
-                {
-                    'direction': BOTH,
-                    'point1': p1,
-                    'point2': p2
-                })
-        else:
-            self.visualisation.append(
-                {
-                    'direction': direction,
-                    'point1': p1,
-                })
+        point_range = self.point_range(point)
+        self.visualisation.append({
+            'direction': direction,
+            'point_range': point_range,
+            'point': point
+        })
 
     def construct_balanced(self, points):
         """Builds balanced tree by recursively dividing sorted indices of points."""
@@ -504,9 +419,9 @@ class KDTreeVisualisation(object):
             if not root.left:
                 root.left = KDNode(point, (depth + 1) % 2)
                 if depth == EVEN:
-                    self.visualise(LEFT, point)
+                    self.visualise(HORIZONTAL, point)
                 else:
-                    self.visualise(DOWN, point)
+                    self.visualise(VERTICAL, point)
                 return root.left
             else:
                 return self.insert(root.left, point)
@@ -514,9 +429,9 @@ class KDTreeVisualisation(object):
             if not root.right:
                 root.right = KDNode(point, (depth + 1) % 2)
                 if depth == EVEN:
-                    self.visualise(RIGHT, point)
+                    self.visualise(HORIZONTAL, point)
                 else:
-                    self.visualise(UP, point)
+                    self.visualise(VERTICAL, point)
                 return root.right
             else:
                 return self.insert(root.right, point)
@@ -534,21 +449,43 @@ class KDTreeVisualisation(object):
         current = self.root
         depth = 0
         while current:
-            if current.point == node.point:
+            if self._key(current.point, depth) == self._key(node.point, depth):
                 return xmin, xmax, ymin, ymax
-            elif current.point > node.point:
+            elif self._key(current.point, depth) > self._key(node.point, depth):
                 if depth == 0:
                     xmax = current.point[0]
                 else:
                     ymax = current.point[1]
                 current = current.left
+                depth = (depth + 1) % 2
             else:
                 if depth == 0:
                     xmin = current.point[0]
                 else:
                     ymin = current.point[1]
                 current = current.right
-        return None
+                depth = (depth + 1) % 2
+
+        return xmin, xmax, ymin, ymax
+
+    def print(self):
+
+        queue = [(self.root, 1)]
+        levels = []
+        while queue:
+            node, lvl = queue.pop(0)
+            if node.left:
+                queue.append((node.left, lvl + 1))
+            if node.right:
+                queue.append((node.right, lvl + 1))
+
+            if len(levels) < lvl:
+                levels.append([node.point])
+            else:
+                levels[lvl-1].append(node.point)
+
+        for level in levels:
+            print(level)
 
     def query(self, x1, x2, y1, y2):
 

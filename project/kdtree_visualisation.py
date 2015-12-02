@@ -1,28 +1,21 @@
 from lab4.display.graphics_wrapper import Drawer
 from project.kdtree import KDTreeVisualisation
-from project.visualisation_utils import draw_points_with_mouse, INFINITE
-from project.visualisation_utils import UP, DOWN, LEFT, RIGHT, BOTH
+from project.visualisation_utils import draw_points_with_mouse, INFINITE, HORIZONTAL, VERTICAL
 
 
 def draw_construction(visualisation, d, win_size_x, win_size_y, wait=False):
     for step in visualisation:
-        p1 = step['point1']
-        p2 = None
-        if step['direction'] == INFINITE:
+
+        if step['direction'] == HORIZONTAL or step['direction'] == VERTICAL:
+            pr = step['point_range']
+            point = step['point']
+            p1, p2 = determine_line(pr, point, step['direction'], win_size_x, win_size_y)
+        elif step['direction'] == INFINITE:
+            p1 = step['point']
             p1 = p1[0], -win_size_y
             p2 = p1[0], win_size_y
-        elif step['direction'] == BOTH:
-            p2 = step['point2']
-        elif step['direction'] == UP:
-            p2 = p1[0], win_size_y
-            d.draw_line(p1, p2)
-        elif step['direction'] == LEFT:
-            p2 = -win_size_x, p1[1]
-        elif step['direction'] == DOWN:
-            p2 = p1[0], -win_size_y
-        elif step['direction'] == RIGHT:
-            p2 = win_size_x, p1[1]
-        d.draw_line(p1, p2, color="black")
+        if p1 and p2:
+            d.draw_line(p1, p2, color="black")
         if wait:
             d.wait_for_click()
 
@@ -41,6 +34,30 @@ def determine_rectangle(point_range, win_size_x, win_size_y):
 
     p1 = xmin, ymin
     p2 = xmax, ymax
+    return p1, p2
+
+
+def determine_line(point_range, point, orient, win_size_x, win_size_y):
+    xmin, xmax, ymin, ymax = point_range
+
+    if not xmin:
+        xmin = -win_size_x
+    if not xmax:
+        xmax = win_size_x
+    if not ymin:
+        ymin = -win_size_y
+    if not ymax:
+        ymax = win_size_y
+
+    if orient == HORIZONTAL:
+        p1 = xmin, point[1]
+        p2 = xmax, point[1]
+    elif orient == VERTICAL:
+        p1 = point[0], ymin
+        p2 = point[0], ymax
+    else:
+        raise ValueError("If this happens, something is really wrong.")
+
     return p1, p2
 
 
@@ -82,6 +99,7 @@ def visualise(search_range, filename=None):
         if pressed_key in build_keys:
             kdtree.construct_balanced(points)
             tree_built = True
+            kdtree.print()
             draw_construction(kdtree.visualisation, d, win_size_x, win_size_y, wait=True)
 
         elif pressed_key in search_keys:
