@@ -240,11 +240,32 @@ class QTV(object):
             self.SE.print(lvl+1)
 
     def query_range(self, qrange):
+
+        self.parent.query_visualisation.append({
+            'type': 'boundary',
+            'value': self.boundary
+        })
+
+        # TODO: uncomment and make sense
+        # if self.point:
+        #     self.parent.visualisation.append({
+        #         'type': 'point',
+        #         'value': self.point
+        #     })
+
         result = []
         if not self.boundary.intersects(qrange):
+            self.parent.query_visualisation.append({
+                'type': 'boundary_separate',
+                'value': self.boundary
+            })
             return result
 
         if self.point and qrange.contains(self.point):
+            self.parent.query_visualisation.append({
+                'type': 'point',
+                'value': self.point
+            })
             result.append(self.point)
 
         if not self.NW:

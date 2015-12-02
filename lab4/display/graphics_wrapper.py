@@ -1,6 +1,6 @@
 import time
 
-from lab4.display.graphics import GraphWin, Point, Line, Circle, Text, Rectangle
+from lab4.display.graphics import GraphWin, Point, Line, Circle, Text, Rectangle, color_rgb
 
 __author__ = 'lewap'
 
@@ -40,6 +40,9 @@ class Drawer:
     def shutdown(self):
         if self.window is not None:
             self.window.close()
+
+    def color(self, r, g, b):
+        return color_rgb(r, g, b)
 
     def draw_coordinate_system(self, scale_sizes=None, scale_line_percentage_length=0.01, color="black"):
         if scale_sizes is None:
