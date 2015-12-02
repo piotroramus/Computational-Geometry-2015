@@ -2,7 +2,9 @@ from project.kdtree import KDTree
 from project.quadtree import QuadTree, Boundary
 from project.tests.algo_tests import test
 from project.tests.execution_time_tests import test as execution_time_test
-from project.kdtree_visualisation import visualise
+from project.kdtree_visualisation import visualise as visualise_kdtree
+from project.quadtree_visualisation import visualise as visualise_quadtree
+
 
 if __name__ == "__main__":
 
@@ -54,4 +56,5 @@ if __name__ == "__main__":
     # test(qtree.query_test_signature)
 
     search_range = -5, 5, -5, 5
-    visualise(search_range)
+    # visualise_kdtree(search_range)
+    visualise_quadtree(search_range)
