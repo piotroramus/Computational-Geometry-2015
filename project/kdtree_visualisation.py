@@ -1,4 +1,4 @@
-from lab4.display.graphics_wrapper import Drawer
+from project.display.graphics_wrapper import Drawer
 from project.kdtree import KDTreeVisualisation
 from project.visualisation_utils import draw_points_with_mouse, INFINITE, HORIZONTAL, VERTICAL
 

@@ -11,7 +11,7 @@ __author__ = 'piotr'
 
 
 def test():
-    points = generate_points(1000, -100, 100, -100, 100)
+    points = generate_points(30000, -100, 100, -100, 100)
 
     points1 = deepcopy(points)
     points2 = deepcopy(points)
@@ -20,7 +20,7 @@ def test():
     points5 = deepcopy(points)
     points6 = deepcopy(points)
 
-    area = -100, 10, 5, 8
+    area = 72, 80, -20, 30
 
     start = time.time()
     res1 = linear_searching(points1, *area)
@@ -30,7 +30,7 @@ def test():
     start = time.time()
     res2 = linear_searching_with_sort(points2, *area)
     end = time.time()
-    print("Linear searching with sorting: " + str(end - start) + "s")
+    # print("Linear searching with sorting: " + str(end - start) + "s")
 
     start = time.time()
     kdtree = KDTree()
@@ -38,8 +38,8 @@ def test():
     start2 = time.time()
     res3 = kdtree.query(*area)
     end = time.time()
-    print("KDTree searching with (slow) balanced tree building: " + str(end - start) + "s")
-    print("KDTree searching on already built tree: " + str(end - start2) + "s")
+    # print("KDTree searching with (slow) balanced tree building: " + str(end - start) + "s")
+    # print("KDTree searching on already built tree: " + str(end - start2) + "s")
 
     start = time.time()
     kdtree = KDTree()
