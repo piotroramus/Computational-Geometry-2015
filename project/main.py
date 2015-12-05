@@ -3,8 +3,9 @@ from project.quadtree_visualisation import visualise as visualise_quadtree
 import sys
 
 
-def print_help():
+def print_help_and_exit():
     print("Program usage: " + sys.argv[0] + " kdtree|qtree [x1 x2 y1 y2]")
+    exit(-1)
 
 if __name__ == "__main__":
 
@@ -17,9 +18,9 @@ if __name__ == "__main__":
         elif sys.argv[1] == 'qtree':
             use_kd = False
         else:
-            print_help()
+            print_help_and_exit()
     else:
-        print_help()
+        print_help_and_exit()
 
     if len(sys.argv) == 6:
         try:
@@ -29,9 +30,7 @@ if __name__ == "__main__":
             y2 = float(sys.argv[5])
             search_range = x1, x2, y1, y2
         except ValueError:
-            print_help()
-    else:
-        print_help()
+            print_help_and_exit()
 
     if use_kd:
         visualise_kdtree(search_range)
