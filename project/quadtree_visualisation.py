@@ -1,15 +1,11 @@
 from project.display.graphics_wrapper import Drawer
 from project.quadtree import QuadTreeVisualisation, BoundaryVisualisation
 from project.visualisation_utils import draw_points_with_mouse
-import pprint
 
 __author__ = 'piotr'
 
 
 def draw_construction(visualisation, points, d, win_size_x, win_size_y, wait=False):
-
-    pp = pprint.PrettyPrinter(indent=3)
-    pp.pprint(visualisation)
 
     b = None
     points_raw = points

@@ -1,6 +1,6 @@
 import time
 from project.kdtree import KDTree
-from project.io import generate_points
+from project.points_io import generate_points
 from copy import deepcopy
 
 from project.quadtree import QuadTree, Boundary

@@ -1,6 +1,7 @@
-__author__ = 'piotr'
-
 import random
+
+
+__author__ = 'piotr'
 
 
 def generate_points(n, min_x, max_x, min_y, max_y):

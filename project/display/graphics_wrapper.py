@@ -1,6 +1,6 @@
 import time
 
-from lab4.display.graphics import GraphWin, Point, Line, Circle, Text, Rectangle, color_rgb
+from project.display.graphics import GraphWin, Point, Line, Circle, Text, Rectangle, color_rgb
 
 __author__ = 'lewap'
 
